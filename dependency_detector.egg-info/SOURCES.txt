@@ -1,0 +1,9 @@
+bin/detect-dependencies
+dependency_detector.egg-info/PKG-INFO
+dependency_detector.egg-info/SOURCES.txt
+dependency_detector.egg-info/dependency_links.txt
+dependency_detector.egg-info/requires.txt
+dependency_detector.egg-info/top_level.txt
+requirements_detector/__init__.py
+requirements_detector/detect.py
+requirements_detector/requirement.py

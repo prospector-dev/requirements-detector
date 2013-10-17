@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: dependency-detector
+Version: 0.1.dev1381999609
+Summary: Python tool to find and list dependencies of a Python project
+Home-page: https://github.com/landscapeio/dependency-detector
+Author: landscape.io
+Author-email: code@landscape.io
+License: MIT
+Description: UNKNOWN
+Keywords: python dependency detector
+Platform: UNKNOWN

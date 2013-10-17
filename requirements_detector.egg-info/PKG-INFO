@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: requirements-detector
+Version: 0.1.dev1381999635
+Summary: Python tool to find and list requirements of a Python project
+Home-page: https://github.com/landscapeio/requirements-detector
+Author: landscape.io
+Author-email: code@landscape.io
+License: MIT
+Description: UNKNOWN
+Keywords: python requirements detector
+Platform: UNKNOWN

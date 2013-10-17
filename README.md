@@ -27,6 +27,7 @@ The output will be plaintext, and match that of a [pip requirements file](http:/
 Django==1.5.2
 South>=0.8
 anyjson
+celery>=2.2,<3
 ```
 
 ### Usage From Python
@@ -35,5 +36,5 @@ anyjson
 >>> import os
 >>> from requirements_detector import find_requirements
 >>> find_requirements(os.getcwd())
-
+[DetectedRequirement:Django==1.5.2, DetectedRequirement:South>=0.8, ...]
 ```

@@ -1,7 +1,7 @@
-from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const
 import re
 import os
-from pkg_resources import Requirement
+from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const
+from requirements_detector.requirement import DetectedRequirement
 
 
 __all__ = ['find_dependencies',
@@ -121,7 +121,7 @@ class SetupWalker(object):
 
             if isinstance(child_node.value, (List, Tuple)):
                 # joy! this is a simple list or tuple of requirements
-                # this is a Keyword -> List or Keyword -> Tuple
+                # this is a Keyword -> List or.nameword -> Tuple
                 return self._get_list_value(child_node.value)
 
             if isinstance(child_node.value, Name):
@@ -148,9 +148,9 @@ def from_setup_py(setup_file):
 
     requirements = []
     for req in walker.get_install_requires():
-        requirements.append(Requirement.parse(req))
+        requirements.append(DetectedRequirement.parse(req))
 
-    requirements.sort(key=lambda r: r.key)
+    requirements.sort(key=lambda r: r.name)
     return requirements
 
 
@@ -174,9 +174,9 @@ def from_requirements_txt(requirements_file):
             if any([req.strip().startswith(protocol) for protocol in ('http', 'https', 'ftp', 'sftp')]):
                 # TODO: this should also deal with archive URLs
                 continue
-            requirements.append(Requirement.parse(req))
+            requirements.append(DetectedRequirement.parse(req))
 
-    requirements.sort(key=lambda r: r.key)
+    requirements.sort(key=lambda r: r.name)
     return requirements
 
 
@@ -188,7 +188,7 @@ def from_requirements_dir(path):
             # TODO: deal with duplicates
             requirements += from_requirements_txt(filepath)
 
-    requirements.sort(key=lambda r: r.key)
+    requirements.sort(key=lambda r: r.name)
     return requirements
 
 
@@ -206,5 +206,5 @@ def from_requirements_blob(path):
             continue
         requirements += from_requirements_txt(filepath)
 
-    requirements.sort(key=lambda r: r.key)
+    requirements.sort(key=lambda r: r.name)
     return requirements

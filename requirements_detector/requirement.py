@@ -4,7 +4,9 @@ a project. It is somewhat redundant to re-implement here as we could use
 `pip.req.InstallRequirement`, but that would require depending on pip which is not
 easy to do since it will usually be installed by the user at a specific version.
 Additionally, the pip implementation has a lot of extra features that we don't need -
-we don't expect relative file paths to exist, for example.
+we don't expect relative file paths to exist, for example. Note that the parsing here
+is also intentionally more lenient - it is not our job to validate the requirements
+list.
 """
 import os
 import re
@@ -46,19 +48,29 @@ def _strip_fragment(urlparts):
 
 class DetectedRequirement(object):
 
-    def __init__(self, name, version_specs=None, url=None):
-        self.name = name
-        self.version_specs = version_specs
-        self.url = url
+    def __init__(self, name=None, url=None, requirement=None):
+        if requirement is not None:
+            self.name = requirement.key
+            self.requirement = requirement
+            self.version_specs = requirement.specs
+            self.url = None
+        else:
+            self.name = name
+            self.version_specs = []
+            self.url = url
+            self.requirement = None
 
     def __str__(self):
         rep = self.name or 'Unknown'
         if self.version_specs:
-            specs = ','.join(['%s%s' % (comp, version) for comp, version in self._version_specs])
+            specs = ','.join(['%s%s' % (comp, version) for comp, version in self.version_specs])
             rep = '%s%s' % (rep, specs)
         if self.url:
             rep = '%s (%s)' % self.url
         return rep
+
+    def __repr__(self):
+        return 'DetectedRequirement:%s' % str(self)
 
     def __eq__(self, other):
         return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
@@ -76,18 +88,28 @@ class DetectedRequirement(object):
         # 7) (-e|--editable) <vcs_url>#egg=<dependency_name>
         line = line.strip()
 
-        if line.startswith('-e') or line.startswith('--editable'):
-            # strip the editable flag
-            line = re.sub('^.* ', '', line)
+        # strip the editable flag
+        line = re.sub('^(-e|--editable) ', '', line)
 
         url = urlparse.urlparse(line)
 
-        if url.scheme == '' and not _is_filepath(line):
+        # if it is a VCS URL, then we want to strip off the protocol as urlparse
+        # might not handle it correctly
+        vcs_scheme = None
+        if '+' in url.scheme:
+            vcs_scheme = url.scheme
+            url = urlparse.urlparse(re.sub(r'^%s://' % re.escape(url.scheme), '', line))
+
+        if vcs_scheme is None and url.scheme == '' and not _is_filepath(line):
             # if we are here, it is a simple dependency
             req = Requirement.parse(line)
-            return DetectedRequirement(req.key, version_specs=req.specs)
+            return DetectedRequirement(requirement=req)
 
         # otherwise, this is some kind of URL
-        name = _parse_egg_name(url)
+        name = _parse_egg_name(url.fragment)
         url = _strip_fragment(url)
+
+        if vcs_scheme:
+            url = '%s://%s' % (vcs_scheme, url)
+
         return DetectedRequirement(name=name, url=url)

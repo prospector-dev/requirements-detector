@@ -121,7 +121,7 @@ class SetupWalker(object):
 
             if isinstance(child_node.value, (List, Tuple)):
                 # joy! this is a simple list or tuple of requirements
-                # this is a Keyword -> List or.nameword -> Tuple
+                # this is a Keyword -> List or Keyword -> Tuple
                 return self._get_list_value(child_node.value)
 
             if isinstance(child_node.value, Name):
@@ -167,12 +167,6 @@ def from_requirements_txt(requirements_file):
                 continue
             if req.strip().split()[0] in _PIP_OPTIONS:
                 # this is a pip option
-                continue
-            if req.strip().startswith('-e'):
-                # TODO: this should handle local/vcs dependencies too
-                continue
-            if any([req.strip().startswith(protocol) for protocol in ('http', 'https', 'ftp', 'sftp')]):
-                # TODO: this should also deal with archive URLs
                 continue
             requirements.append(DetectedRequirement.parse(req))
 

@@ -1,13 +1,13 @@
 import os
 from unittest import TestCase
-from pkg_resources import Requirement
 from requirements_detector.detect import from_requirements_txt, from_requirements_dir, from_requirements_blob, from_setup_py, CouldNotParseRequirements
+from requirements_detector.requirement import DetectedRequirement
 
 
 class DependencyDetectionTest(TestCase):
 
     def _expected(self, *requirements):
-        return [Requirement.parse(req) for req in requirements]
+        return [DetectedRequirement.parse(req) for req in requirements]
 
     def test_requirements_txt_parsing(self):
         filepath = os.path.join(os.path.dirname(__file__), 'detection/test1/requirements.txt')

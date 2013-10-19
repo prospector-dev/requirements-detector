@@ -66,7 +66,7 @@ class DetectedRequirement(object):
             specs = ','.join(['%s%s' % (comp, version) for comp, version in self.version_specs])
             rep = '%s%s' % (rep, specs)
         if self.url:
-            rep = '%s (%s)' % self.url
+            rep = '%s (%s)' % (rep, self.url)
         return rep
 
     def __repr__(self):

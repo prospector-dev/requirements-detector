@@ -10,12 +10,12 @@ It uses the following methods in order, in the root of the project:
 1. Parse `setup.py`
 2. Parse `requirements.txt`
 3. Parse all `*.txt` files inside a folder called `requirements`
-4. Parse all files in the root folder matching `*reqiurements*.txt` or `reqs.txt` (so for example, `pip_reqiurements.txt` would match, as would `requirements_common.txt`)
+4. Parse all files in the root folder matching `*requirements*.txt` or `reqs.txt` (so for example, `pip_requirements.txt` would match, as would `requirements_common.txt`)
 
 ### Usage
 
 ```
-detect-requirements path
+detect-requirements [path]
 ```
 If `path` is not specified, the current working directory will be used.
 
@@ -27,6 +27,7 @@ The output will be plaintext, and match that of a [pip requirements file](http:/
 Django==1.5.2
 South>=0.8
 anyjson
+celery>=2.2,<3
 ```
 
 ### Usage From Python
@@ -35,5 +36,5 @@ anyjson
 >>> import os
 >>> from requirements_detector import find_requirements
 >>> find_requirements(os.getcwd())
-
+[DetectedRequirement:Django==1.5.2, DetectedRequirement:South>=0.8, ...]
 ```

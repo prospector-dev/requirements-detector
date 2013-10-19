@@ -10,7 +10,7 @@ class DependencyDetectionTest(TestCase):
         return [Requirement.parse(req) for req in requirements]
 
     def test_requirements_txt_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), 'test1/requirements.txt')
+        filepath = os.path.join(os.path.dirname(__file__), 'detection/test1/requirements.txt')
         dependencies = from_requirements_txt(filepath)
 
         expected = self._expected(
@@ -23,7 +23,7 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(expected, dependencies)
 
     def test_requirements_dir_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), 'test2/requirements')
+        filepath = os.path.join(os.path.dirname(__file__), 'detection/test2/requirements')
         dependencies = from_requirements_dir(filepath)
 
         expected = self._expected(
@@ -36,7 +36,7 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(expected, dependencies)
 
     def test_requirements_dir_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), 'test2/requirements')
+        filepath = os.path.join(os.path.dirname(__file__), 'detection/test2/requirements')
         dependencies = from_requirements_dir(filepath)
 
         expected = self._expected(
@@ -49,7 +49,7 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(expected, dependencies)
 
     def test_requirements_blob_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), 'test3')
+        filepath = os.path.join(os.path.dirname(__file__), 'detection/test3')
         dependencies = from_requirements_blob(filepath)
 
         expected = self._expected(
@@ -61,13 +61,13 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(expected, dependencies)
 
     def _test_setup_py(self, setup_py_file, *expected):
-        filepath = os.path.join(os.path.dirname(__file__), 'test4', setup_py_file)
+        filepath = os.path.join(os.path.dirname(__file__), 'detection/test4', setup_py_file)
         dependencies = from_setup_py(filepath)
         expected = self._expected(*expected)
         self.assertEqual(expected, dependencies)
 
     def _test_setup_py_not_parseable(self, setup_py_file):
-        filepath = os.path.join(os.path.dirname(__file__), 'test4', setup_py_file)
+        filepath = os.path.join(os.path.dirname(__file__), 'detection/test4', setup_py_file)
         self.assertRaises(CouldNotParseRequirements, from_setup_py, filepath)
 
     def test_simple_setup_py_parsing(self):

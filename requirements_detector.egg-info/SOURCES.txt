@@ -1,9 +1,0 @@
-bin/detect-requirements
-requirements_detector/__init__.py
-requirements_detector/detect.py
-requirements_detector/requirement.py
-requirements_detector.egg-info/PKG-INFO
-requirements_detector.egg-info/SOURCES.txt
-requirements_detector.egg-info/dependency_links.txt
-requirements_detector.egg-info/requires.txt
-requirements_detector.egg-info/top_level.txt

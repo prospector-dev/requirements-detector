@@ -15,7 +15,7 @@ It uses the following methods in order, in the root of the project:
 ### Usage
 
 ```
-detect-requirements path
+detect-requirements [path]
 ```
 If `path` is not specified, the current working directory will be used.
 

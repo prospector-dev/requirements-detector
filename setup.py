@@ -20,5 +20,5 @@ setup(
     install_requires=['astroid>=1.0.0'],
     packages=_packages,
     license='MIT',
-    keywords=('python requirements detector',)
+    keywords='python requirements detector',
 )

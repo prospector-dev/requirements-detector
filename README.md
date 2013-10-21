@@ -1,5 +1,8 @@
 # Requirements Detector
 
+[![Build Status](https://travis-ci.org/landscapeio/requirements-detector.png?branch=master)](https://travis-ci.org/landscapeio/requirements-detector) 
+[![Code Quality](https://landscape.io/github/landscapeio/requirements-detector/badge/master.png)](https://landscape.io/github/landscapeio/requirements-detector) 
+
 
 `requirements-detector` is a simple Python tool which attempts to find and list the requirements of a Python project. 
 

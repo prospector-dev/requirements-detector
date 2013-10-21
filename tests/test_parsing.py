@@ -52,10 +52,10 @@ class TestEggFragmentParsing(TestCase):
         self.assertEqual('somelib', _parse_egg_name('egg=somelib'))
 
     def test_no_egg_value(self):
-        self.assertIsNone(_parse_egg_name('a=b&c=2'))
+        self.assertTrue(_parse_egg_name('a=b&c=2') is None)
 
     def test_no_pairs(self):
-        self.assertIsNone(_parse_egg_name('somelib'))
+        self.assertTrue(_parse_egg_name('somelib') is None)
 
     def test_first_egg_val(self):
         self.assertEqual('somelib', _parse_egg_name('egg=somelib&egg=anotherlib'))

@@ -1,5 +1,6 @@
 import re
 import os
+from astroid.builder import AstroidBuilder
 from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const
 from requirements_detector.requirement import DetectedRequirement
 
@@ -143,7 +144,9 @@ class SetupWalker(object):
 
 
 def from_setup_py(setup_file):
-    ast = MANAGER.ast_from_file(setup_file)
+    with open(setup_file) as f:
+        ast = AstroidBuilder(MANAGER).string_build(f.read())
+
     walker = SetupWalker(ast)
 
     requirements = []

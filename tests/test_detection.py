@@ -35,19 +35,6 @@ class DependencyDetectionTest(TestCase):
 
         self.assertEqual(expected, dependencies)
 
-    def test_requirements_dir_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), 'detection/test2/requirements')
-        dependencies = from_requirements_dir(filepath)
-
-        expected = self._expected(
-            'amqp==1.0.13',
-            'anyjson==0.3.3',
-            'Django==1.5.2',
-            'South==0.8.2',
-        )
-
-        self.assertEqual(expected, dependencies)
-
     def test_requirements_blob_parsing(self):
         filepath = os.path.join(os.path.dirname(__file__), 'detection/test3')
         dependencies = from_requirements_blob(filepath)

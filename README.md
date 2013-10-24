@@ -1,12 +1,14 @@
 # Requirements Detector
 
+## Status
+
 [![Build Status](https://travis-ci.org/landscapeio/requirements-detector.png?branch=master)](https://travis-ci.org/landscapeio/requirements-detector) 
-[![Code Quality](https://landscape.io/github/landscapeio/requirements-detector/badge/master.png)](https://landscape.io/github/landscapeio/requirements-detector)
+[![Code Quality](https://landscape.io/github/landscapeio/requirements-detector/master/landscape.png)](https://landscape.io/github/landscapeio/requirements-detector)
 [![Coverage Status](https://coveralls.io/repos/landscapeio/requirements-detector/badge.png)](https://coveralls.io/r/landscapeio/requirements-detector)
 [![Latest Version](https://pypip.in/v/requirements-detector/badge.png)](https://crate.io/package/requirements-detector)
 [![Downloads](https://pypip.in/d/requirements-detector/badge.png)](https://crate.io/package/requirements-detector)
 
-
+## About
 
 `requirements-detector` is a simple Python tool which attempts to find and list the requirements of a Python project. 
 

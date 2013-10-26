@@ -1,7 +1,7 @@
 import re
 import os
 from astroid.builder import AstroidBuilder
-from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const
+from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const, AssName
 from requirements_detector.requirement import DetectedRequirement
 
 
@@ -95,7 +95,8 @@ class SetupWalker(object):
         for child_node in node.get_children():
             if top and isinstance(child_node, Assign):
                 for target in child_node.targets:
-                    self._top_level_assigns[target.name] = child_node.value
+                    if isinstance(target, AssName):
+                        self._top_level_assigns[target.name] = child_node.value
             self.walk(child_node)
 
     def _get_list_value(self, list_node):

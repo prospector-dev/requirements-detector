@@ -5,10 +5,9 @@ from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const
 from requirements_detector.requirement import DetectedRequirement
 
 
-__all__ = ['find_dependencies',
+__all__ = ['find_requirements',
            'RequirementsNotFound',
-           'CouldNotParseRequirements',
-           'get_prospector_profiles']
+           'CouldNotParseRequirements']
 
 
 _PIP_OPTIONS = (

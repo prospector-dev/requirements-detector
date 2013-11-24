@@ -171,7 +171,10 @@ def from_requirements_txt(requirements_file):
             if req.strip().split()[0] in _PIP_OPTIONS:
                 # this is a pip option
                 continue
-            requirements.append(DetectedRequirement.parse(req))
+            detected = DetectedRequirement.parse(req)
+            if detected is None:
+                continue
+            requirements.append(detected)
 
     requirements.sort(key=lambda r: r.name)
     return requirements

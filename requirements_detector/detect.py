@@ -5,10 +5,9 @@ from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const
 from requirements_detector.requirement import DetectedRequirement
 
 
-__all__ = ['find_dependencies',
+__all__ = ['find_requirements',
            'RequirementsNotFound',
-           'CouldNotParseRequirements',
-           'get_prospector_profiles']
+           'CouldNotParseRequirements']
 
 
 _PIP_OPTIONS = (
@@ -172,7 +171,10 @@ def from_requirements_txt(requirements_file):
             if req.strip().split()[0] in _PIP_OPTIONS:
                 # this is a pip option
                 continue
-            requirements.append(DetectedRequirement.parse(req))
+            detected = DetectedRequirement.parse(req)
+            if detected is None:
+                continue
+            requirements.append(detected)
 
     requirements.sort(key=lambda r: r.name)
     return requirements

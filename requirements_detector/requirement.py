@@ -10,8 +10,13 @@ list.
 """
 import os
 import re
-import urlparse
 from pkg_resources import Requirement
+
+try:
+    import urlparse
+except ImportError:
+    # python3
+    from urllib import parse as urlparse
 
 
 def _is_filepath(req):
@@ -102,8 +107,13 @@ class DetectedRequirement(object):
 
         if vcs_scheme is None and url.scheme == '' and not _is_filepath(line):
             # if we are here, it is a simple dependency
-            req = Requirement.parse(line)
-            return DetectedRequirement(requirement=req)
+            try:
+                req = Requirement.parse(line)
+            except ValueError:
+                # this happens if the line is invalid
+                return None
+            else:
+                return DetectedRequirement(requirement=req)
 
         # otherwise, this is some kind of URL
         name = _parse_egg_name(url.fragment)

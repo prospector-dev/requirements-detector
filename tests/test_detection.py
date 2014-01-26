@@ -47,6 +47,12 @@ class DependencyDetectionTest(TestCase):
 
         self.assertEqual(expected, dependencies)
 
+    def test_invalid_requirements_txt(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'detection/test5/invalid_requirements.txt')
+        dependencies = from_requirements_txt(filepath)
+        expected = self._expected('django<1.6', 'django')
+        self.assertEqual(expected, dependencies)
+
     def _test_setup_py(self, setup_py_file, *expected):
         filepath = os.path.join(os.path.dirname(__file__), 'detection/test4', setup_py_file)
         dependencies = from_setup_py(filepath)

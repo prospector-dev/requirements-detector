@@ -1,4 +1,10 @@
-import urlparse
+
+try:
+    import urlparse
+except ImportError:
+    # python3
+    from urllib import parse as urlparse
+
 from unittest import TestCase
 from requirements_detector.requirement import DetectedRequirement, _parse_egg_name, _strip_fragment
 

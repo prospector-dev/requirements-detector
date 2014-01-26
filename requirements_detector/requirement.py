@@ -10,8 +10,13 @@ list.
 """
 import os
 import re
-import urlparse
 from pkg_resources import Requirement
+
+try:
+    import urlparse
+except ImportError:
+    # python3
+    from urllib import parse as urlparse
 
 
 def _is_filepath(req):

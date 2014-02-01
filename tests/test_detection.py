@@ -1,6 +1,7 @@
 import os
 from unittest import TestCase
-from requirements_detector.detect import from_requirements_txt, from_requirements_dir, from_requirements_blob, from_setup_py, CouldNotParseRequirements
+from requirements_detector.detect import from_requirements_txt, from_requirements_dir, \
+    from_requirements_blob, from_setup_py, CouldNotParseRequirements
 from requirements_detector.requirement import DetectedRequirement
 
 

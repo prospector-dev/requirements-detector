@@ -145,7 +145,11 @@ class SetupWalker(object):
 
 def from_setup_py(setup_file):
     with open(setup_file) as f:
-        ast = AstroidBuilder(MANAGER).string_build(f.read())
+        try:
+            ast = AstroidBuilder(MANAGER).string_build(f.read())
+        except SyntaxError:
+            # if the setup file is broken, we can't do much about that...
+            raise CouldNotParseRequirements
 
     walker = SetupWalker(ast)
 

@@ -96,7 +96,10 @@ class DetectedRequirement(object):
         # strip the editable flag
         line = re.sub('^(-e|--editable) ', '', line)
 
+        # monkeypatch time!
+        urlparse.uses_fragment.append('git')
         url = urlparse.urlparse(line)
+        urlparse.uses_fragment.remove('git')
 
         # if it is a VCS URL, then we want to strip off the protocol as urlparse
         # might not handle it correctly
@@ -104,6 +107,8 @@ class DetectedRequirement(object):
         if '+' in url.scheme:
             vcs_scheme = url.scheme
             url = urlparse.urlparse(re.sub(r'^%s://' % re.escape(url.scheme), '', line))
+        elif url.scheme in ('git',):
+            vcs_scheme = url.scheme
 
         if vcs_scheme is None and url.scheme == '' and not _is_filepath(line):
             # if we are here, it is a simple dependency
@@ -119,7 +124,7 @@ class DetectedRequirement(object):
         name = _parse_egg_name(url.fragment)
         url = _strip_fragment(url)
 
-        if vcs_scheme:
+        if vcs_scheme not in (None, 'git'):
             url = '%s://%s' % (vcs_scheme, url)
 
         return DetectedRequirement(name=name, url=url)

@@ -65,6 +65,19 @@ class DetectedRequirement(object):
             self.url = url
             self.requirement = None
 
+    def _format_specs(self):
+        return ','.join(['%s%s' % (comp, version) for comp, version in self.version_specs])
+
+    def pip_format(self):
+        if self.url:
+            if self.name:
+                return '%s#egg=%s' % (self.url, self.name)
+            return self.url
+        if self.name:
+            if self.version_specs:
+                return "%s%s" % (self.name, self._format_specs())
+            return self.name
+
     def __str__(self):
         rep = self.name or 'Unknown'
         if self.version_specs:
@@ -96,19 +109,17 @@ class DetectedRequirement(object):
         # strip the editable flag
         line = re.sub('^(-e|--editable) ', '', line)
 
-        # monkeypatch time!
-        urlparse.uses_fragment.append('git')
         url = urlparse.urlparse(line)
-        urlparse.uses_fragment.remove('git')
 
         # if it is a VCS URL, then we want to strip off the protocol as urlparse
         # might not handle it correctly
         vcs_scheme = None
-        if '+' in url.scheme:
-            vcs_scheme = url.scheme
+        if '+' in url.scheme or url.scheme in ('git',):
+            if url.scheme == 'git':
+                vcs_scheme = 'git+git'
+            else:
+                vcs_scheme = url.scheme
             url = urlparse.urlparse(re.sub(r'^%s://' % re.escape(url.scheme), '', line))
-        elif url.scheme in ('git',):
-            vcs_scheme = url.scheme
 
         if vcs_scheme is None and url.scheme == '' and not _is_filepath(line):
             # if we are here, it is a simple dependency
@@ -124,7 +135,7 @@ class DetectedRequirement(object):
         name = _parse_egg_name(url.fragment)
         url = _strip_fragment(url)
 
-        if vcs_scheme not in (None, 'git'):
+        if vcs_scheme:
             url = '%s://%s' % (vcs_scheme, url)
 
         return DetectedRequirement(name=name, url=url)

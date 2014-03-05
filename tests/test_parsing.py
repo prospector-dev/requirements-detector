@@ -39,7 +39,7 @@ class TestRequirementParsing(TestCase):
         self._test('git+ssh://git@github.com/something/somelib.git#egg=somelib',
                    name='somelib', url='git+ssh://git@github.com/something/somelib.git')
         self._test('git://github.com/peeb/django-mollie-ideal.git#egg=mollie',
-                   name='mollie', url='git://github.com/peeb/django-mollie-ideal.git')
+                   name='mollie', url='git+git://github.com/peeb/django-mollie-ideal.git')
 
     def test_archive_url(self):
         self._test('http://example.com/somelib.tar.gz', url='http://example.com/somelib.tar.gz')

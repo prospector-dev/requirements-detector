@@ -155,7 +155,7 @@ def from_setup_py(setup_file):
 
     requirements = []
     for req in walker.get_install_requires():
-        requirements.append(DetectedRequirement.parse(req))
+        requirements.append(DetectedRequirement.parse(req, setup_file))
 
     requirements.sort(key=lambda r: r.name)
     return requirements
@@ -175,7 +175,7 @@ def from_requirements_txt(requirements_file):
             if req.strip().split()[0] in _PIP_OPTIONS:
                 # this is a pip option
                 continue
-            detected = DetectedRequirement.parse(req)
+            detected = DetectedRequirement.parse(req, requirements_file)
             if detected is None:
                 continue
             requirements.append(detected)

@@ -53,7 +53,7 @@ def _strip_fragment(urlparts):
 
 class DetectedRequirement(object):
 
-    def __init__(self, name=None, url=None, requirement=None):
+    def __init__(self, name=None, url=None, requirement=None, location_defined=None):
         if requirement is not None:
             self.name = requirement.key
             self.requirement = requirement
@@ -64,6 +64,7 @@ class DetectedRequirement(object):
             self.version_specs = []
             self.url = url
             self.requirement = None
+        self.location_defined = location_defined
 
     def _format_specs(self):
         return ','.join(['%s%s' % (comp, version) for comp, version in self.version_specs])
@@ -94,7 +95,7 @@ class DetectedRequirement(object):
         return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
 
     @staticmethod
-    def parse(line):
+    def parse(line, location_defined=None):
         # the options for a Pip requirements file are:
         #
         # 1) <dependency_name>
@@ -129,7 +130,7 @@ class DetectedRequirement(object):
                 # this happens if the line is invalid
                 return None
             else:
-                return DetectedRequirement(requirement=req)
+                return DetectedRequirement(requirement=req, location_defined=location_defined)
 
         # otherwise, this is some kind of URL
         name = _parse_egg_name(url.fragment)
@@ -138,4 +139,4 @@ class DetectedRequirement(object):
         if vcs_scheme:
             url = '%s://%s' % (vcs_scheme, url)
 
-        return DetectedRequirement(name=name, url=url)
+        return DetectedRequirement(name=name, url=url, location_defined=location_defined)

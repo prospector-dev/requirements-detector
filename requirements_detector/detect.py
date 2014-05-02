@@ -10,6 +10,10 @@ __all__ = ['find_requirements',
            'CouldNotParseRequirements']
 
 
+# PEP263, see http://legacy.python.org/dev/peps/pep-0263/
+ENCODING_REGEXP = re.compile(r'coding[:=]\s*([-\w.]+)')
+
+
 _PIP_OPTIONS = (
     '-i', '--index-url',
     '--extra-index-url',
@@ -25,6 +29,31 @@ class RequirementsNotFound(Exception):
 
 class CouldNotParseRequirements(Exception):
     pass
+
+
+def _load_file_contents(filepath):
+    # This function is a bit of a tedious workaround (AKA 'hack').
+    # Astroid calls 'compile' under the hood, which refuses to accept a Unicode
+    # object which contains a PEP-263 encoding definition. However if we give
+    # Astroid raw bytes, it'll assume ASCII. Therefore we need to detect the encoding
+    # here, convert the file contents to a Unicode object, *and also strip the encoding
+    # declaration* to avoid the compile step breaking.
+    with open(filepath) as f:
+        contents = f.readlines()
+
+        result = []
+        encoding_lines = contents[0:2]
+        encoding = 'utf-8'
+        for line in encoding_lines:
+            match = ENCODING_REGEXP.search(line)
+            if match is None:
+                result.append(line)
+            else:
+                encoding = match.group(1)
+
+        result += contents[2:]
+        result = '\n'.join(result)
+        return result.decode(encoding)
 
 
 def find_requirements(path):
@@ -144,12 +173,12 @@ class SetupWalker(object):
 
 
 def from_setup_py(setup_file):
-    with open(setup_file) as f:
-        try:
-            ast = AstroidBuilder(MANAGER).string_build(f.read())
-        except SyntaxError:
-            # if the setup file is broken, we can't do much about that...
-            raise CouldNotParseRequirements
+    try:
+        contents = _load_file_contents(setup_file)
+        ast = AstroidBuilder(MANAGER).string_build(contents)
+    except SyntaxError:
+        # if the setup file is broken, we can't do much about that...
+        raise CouldNotParseRequirements
 
     walker = SetupWalker(ast)
 

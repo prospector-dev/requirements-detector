@@ -76,5 +76,8 @@ class DependencyDetectionTest(TestCase):
     def test_subscript_assign(self):
         self._test_setup_py('subscript_assign.py', 'Django==1.5.0', 'django-gubbins==1.1.2')
 
+    def test_utf8_setup_py(self):
+        self._test_setup_py('utf8.py', 'Django==1.5.0', 'django-gubbins==1.1.2')
+
     def test_callable_install_requires(self):
         self._test_setup_py_not_parseable('callable.py')

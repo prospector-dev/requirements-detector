@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 from astroid.builder import AstroidBuilder
 from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const, AssName
 from requirements_detector.requirement import DetectedRequirement
@@ -11,7 +12,10 @@ __all__ = ['find_requirements',
 
 
 # PEP263, see http://legacy.python.org/dev/peps/pep-0263/
-ENCODING_REGEXP = re.compile(r'coding[:=]\s*([-\w.]+)')
+_ENCODING_REGEXP = re.compile(r'coding[:=]\s*([-\w.]+)')
+
+
+_PY3k = sys.version_info >= (3, 0)
 
 
 _PIP_OPTIONS = (
@@ -39,13 +43,16 @@ def _load_file_contents(filepath):
     # here, convert the file contents to a Unicode object, *and also strip the encoding
     # declaration* to avoid the compile step breaking.
     with open(filepath) as f:
+        if _PY3k:
+            return f.read()
+        
         contents = f.readlines()
 
         result = []
         encoding_lines = contents[0:2]
         encoding = 'utf-8'
         for line in encoding_lines:
-            match = ENCODING_REGEXP.search(line)
+            match = _ENCODING_REGEXP.search(line)
             if match is None:
                 result.append(line)
             else:

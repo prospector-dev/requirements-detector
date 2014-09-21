@@ -89,7 +89,7 @@ def find_requirements(path):
             pass
 
     for reqfile_name in ('requirements.txt', 'requirements.pip'):
-        reqfile_path  = os.path.join(path, reqfile_name)
+        reqfile_path = os.path.join(path, reqfile_name)
         if os.path.exists(reqfile_path) and os.path.isfile(reqfile_path):
             try:
                 return from_requirements_txt(reqfile_path)

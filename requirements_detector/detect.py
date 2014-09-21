@@ -71,7 +71,7 @@ def find_requirements(path):
     It will attempt, in order:
 
     1) to parse setup.py in the root for an install_requires value
-    2) to read a requirements.txt file in the root
+    2) to read a requirements.txt file or a requirements.pip in the root
     3) to read all .txt files in a folder called 'requirements' in the root
     4) to read files matching "*requirements*.txt" and "*reqs*.txt" in the root,
        excluding any starting or ending with 'test'
@@ -88,12 +88,13 @@ def find_requirements(path):
         except CouldNotParseRequirements:
             pass
 
-    requirements_txt = os.path.join(path, 'requirements.txt')
-    if os.path.exists(requirements_txt) and os.path.isfile(requirements_txt):
-        try:
-            return from_requirements_txt(requirements_txt)
-        except CouldNotParseRequirements:
-            pass
+    for reqfile_name in ('requirements.txt', 'requirements.pip'):
+        reqfile_path  = os.path.join(path, reqfile_name)
+        if os.path.exists(reqfile_path) and os.path.isfile(reqfile_path):
+            try:
+                return from_requirements_txt(reqfile_path)
+            except CouldNotParseRequirements:
+                pass
 
     requirements_dir = os.path.join(path, 'requirements')
     if os.path.exists(requirements_dir) and os.path.isdir(requirements_dir):
@@ -224,7 +225,9 @@ def from_requirements_dir(path):
     requirements = []
     for entry in os.listdir(path):
         filepath = os.path.join(path, entry)
-        if os.path.isfile(filepath) and entry.endswith('.txt'):
+        if not os.path.isfile(filepath):
+            continue
+        if entry.endswith('.txt') or entry.endswith('.pip'):
             # TODO: deal with duplicates
             requirements += from_requirements_txt(filepath)
 

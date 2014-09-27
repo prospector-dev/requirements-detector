@@ -80,6 +80,7 @@ def find_requirements(path):
     will be returned. If none can be found, then a RequirementsNotFound
     will be raised
     """
+    requirements = []
 
     setup_py = os.path.join(path, 'setup.py')
     if os.path.exists(setup_py) and os.path.isfile(setup_py):
@@ -92,18 +93,23 @@ def find_requirements(path):
         reqfile_path = os.path.join(path, reqfile_name)
         if os.path.exists(reqfile_path) and os.path.isfile(reqfile_path):
             try:
-                return from_requirements_txt(reqfile_path)
-            except CouldNotParseRequirements:
+                requirements += from_requirements_txt(reqfile_path)
+            except CouldNotParseRequirements as e:
                 pass
 
     requirements_dir = os.path.join(path, 'requirements')
     if os.path.exists(requirements_dir) and os.path.isdir(requirements_dir):
-        requirements = from_requirements_dir(requirements_dir)
-        if requirements:
-            return requirements
+        from_dir = from_requirements_dir(requirements_dir)
+        if from_dir is not None:
+            requirements += from_dir
 
-    requirements = from_requirements_blob(path)
-    if requirements:
+    from_blob = from_requirements_blob(path)
+    if from_blob is not None:
+        requirements += from_blob
+
+    requirements = list(set(requirements))
+    if len(requirements) > 0:
+        requirements.sort()
         return requirements
 
     raise RequirementsNotFound
@@ -194,7 +200,6 @@ def from_setup_py(setup_file):
     for req in walker.get_install_requires():
         requirements.append(DetectedRequirement.parse(req, setup_file))
 
-    requirements.sort(key=lambda r: r.name)
     return requirements
 
 
@@ -217,7 +222,6 @@ def from_requirements_txt(requirements_file):
                 continue
             requirements.append(detected)
 
-    requirements.sort(key=lambda r: r.name)
     return requirements
 
 
@@ -231,7 +235,6 @@ def from_requirements_dir(path):
             # TODO: deal with duplicates
             requirements += from_requirements_txt(filepath)
 
-    requirements.sort(key=lambda r: r.name)
     return requirements
 
 
@@ -249,5 +252,4 @@ def from_requirements_blob(path):
             continue
         requirements += from_requirements_txt(filepath)
 
-    requirements.sort(key=lambda r: r.name)
     return requirements

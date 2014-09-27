@@ -86,13 +86,19 @@ class DetectedRequirement(object):
             rep = '%s%s' % (rep, specs)
         if self.url:
             rep = '%s (%s)' % (rep, self.url)
-        return rep
+        return rep + self.location_defined
+
+    def __hash__(self):
+        return hash(str(self.name) + str(self.url) + str(self.version_specs))
 
     def __repr__(self):
         return 'DetectedRequirement:%s' % str(self)
 
     def __eq__(self, other):
         return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
+
+    def __gt__(self, other):
+        return self.name > other.name
 
     @staticmethod
     def parse(line, location_defined=None):

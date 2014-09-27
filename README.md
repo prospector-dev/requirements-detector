@@ -16,7 +16,7 @@ When run from the root of a Python project, it will try to ascertain which libra
 
 It uses the following methods in order, in the root of the project:
 
-1. Parse `setup.py`
+1. Parse `setup.py` (if this is successful, the remaining steps are skipped)
 2. Parse `requirements.txt` or `requirements.pip`
 3. Parse all `*.txt` and `*.pip` files inside a folder called `requirements`
 4. Parse all files in the root folder matching `*requirements*.txt` or `reqs.txt` (so for example, `pip_requirements.txt` would match, as would `requirements_common.txt`)

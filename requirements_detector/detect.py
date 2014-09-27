@@ -85,7 +85,9 @@ def find_requirements(path):
     setup_py = os.path.join(path, 'setup.py')
     if os.path.exists(setup_py) and os.path.isfile(setup_py):
         try:
-            return from_setup_py(setup_py)
+            requirements = from_setup_py(setup_py)
+            requirements.sort()
+            return requirements
         except CouldNotParseRequirements:
             pass
 

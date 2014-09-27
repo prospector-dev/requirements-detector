@@ -86,7 +86,7 @@ class DetectedRequirement(object):
             rep = '%s%s' % (rep, specs)
         if self.url:
             rep = '%s (%s)' % (rep, self.url)
-        return rep + self.location_defined
+        return rep
 
     def __hash__(self):
         return hash(str(self.name) + str(self.url) + str(self.version_specs))

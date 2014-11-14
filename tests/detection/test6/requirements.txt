@@ -1,0 +1,82 @@
+# core framework
+uwsgi
+flask
+
+# flask extensions
+flask-mail
+flask-migrate
+flask-oauthlib
+flask-script
+flask-scrypt
+flask-weasyprint
+flask-sqlalchemy
+#flask-testing
+git+git://github.com/jarus/flask-testing.git
+flask-jwt
+flask-bouncer
+flask-restful
+flask-marshmallow
+flask-assets
+flask-collect
+awesome-slugify
+
+# testing
+#fake-factory
+https://github.com/traumtopf/faker/tarball/master
+surrealism
+freezegun
+selenium
+testtools
+
+# maybe extensions
+#restless
+#flash-babel
+#flask-restless
+#flask-assets
+#flask-cache
+#flask-classy
+#flask-debugtoolbar
+#flask-googlemaps
+#flask-gravatar
+#flask-jinjahelpers
+#flask-lesscss
+#flask-markdown
+#flask-moment
+#flask-principal
+#flask-restdoc
+#flask-runner
+#flask-user
+
+# other extensions
+#wtforms-alchemy
+#sqlalchemy-defaults
+#wtforms-components
+#wtforms-json
+
+# testing
+#coverage
+
+# correctness
+#pyflakes
+#pep8
+#flake8
+#pylint
+prospector
+
+# other stuff
+paypalrestsdk
+#outputty
+pycountry
+#certifi
+psycopg2
+#raven[flask] # client for sentry (a web application error logger)
+git+https://github.com/lazzrek/raven-python.git#egg=raven[flask]
+sadisplay==0.3.8dev
+isodate
+colour-runner
+requests
+pygeoip
+
+# webassets filters
+rjsmin
+cssmin

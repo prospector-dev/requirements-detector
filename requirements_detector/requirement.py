@@ -98,7 +98,7 @@ class DetectedRequirement(object):
         return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
 
     def __gt__(self, other):
-        return self.name > other.name
+        return self.name or "" > other.name or ""
 
     @staticmethod
     def parse(line, location_defined=None):

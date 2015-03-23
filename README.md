@@ -2,11 +2,11 @@
 
 ## Status
 
-[![Build Status](https://travis-ci.org/landscapeio/requirements-detector.png?branch=master)](https://travis-ci.org/landscapeio/requirements-detector) 
-[![Code Quality](https://landscape.io/github/landscapeio/requirements-detector/master/landscape.png)](https://landscape.io/github/landscapeio/requirements-detector)
-[![Coverage Status](https://coveralls.io/repos/landscapeio/requirements-detector/badge.png)](https://coveralls.io/r/landscapeio/requirements-detector)
-[![Latest Version](https://pypip.in/v/requirements-detector/badge.png)](https://crate.io/packages/requirements-detector)
-[![Downloads](https://pypip.in/d/requirements-detector/badge.png)](https://crate.io/packages/requirements-detector)
+[![Latest Version](https://pypip.in/version/requirements-detector/badge.svg?text=version&style=flat)](https://pypi.python.org/pypi/requirements-detector)
+[![Build Status](https://travis-ci.org/landscapeio/requirements-detector.png?branch=master)](https://travis-ci.org/landscapeio/requirements-detector)
+[![Health](https://landscape.io/github/landscapeio/requirements-detector/master/landscape.svg?style=flat)](https://landscape.io/github/landscapeio/requirements-detector/master)
+[![Coverage Status](https://img.shields.io/coveralls/landscapeio/requirements-detector.svg?style=flat)](https://coveralls.io/r/landscapeio/requirements-detector)
+[![Documentation](https://readthedocs.org/projects/requirements-detector/badge/?version=master)](https://readthedocs.org/projects/requirements-detector/)
 
 ## About
 

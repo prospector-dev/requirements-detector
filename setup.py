@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from distutils.core import setup
 from setuptools import find_packages
+import sys
 
 
 _version = "0.4.1"
@@ -24,6 +25,16 @@ _CLASSIFIERS = (
 )
 
 
+if sys.version_info < (2, 7):
+    # pylint 1.4 dropped support for Python 2.6
+    _install_requires = [
+        'astroid>=1.0,<1.3.0',
+    ]
+else:
+    _install_requires = [
+        'astroid>=1.4',
+    ]
+
 setup(
     name='requirements-detector',
     url='https://github.com/landscapeio/requirements-detector',
@@ -32,7 +43,7 @@ setup(
     description=_short_description,
     version=_version,
     scripts=['bin/detect-requirements'],
-    install_requires=['astroid>=1.0.0'],
+    install_requires=_install_requires,
     packages=_packages,
     license='MIT',
     keywords='python requirements detector',

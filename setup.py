@@ -3,7 +3,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 
-_version = "0.4"
+_version = "0.4.1"
 _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
 
 _short_description = "Python tool to find and list requirements of a Python project"
@@ -17,6 +17,8 @@ _CLASSIFIERS = (
     'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3.3',
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
     'License :: OSI Approved :: '
     'GNU General Public License v2 or later (GPLv2+)',
 )

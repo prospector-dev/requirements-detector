@@ -54,11 +54,11 @@ def _load_file_contents(filepath):
         for line in encoding_lines:
             match = _ENCODING_REGEXP.search(line)
             if match is None:
-                result.append(line)
+                result.append(line.strip())
             else:
                 encoding = match.group(1)
 
-        result += contents[2:]
+        result += [line.rstrip() for line in contents[2:]]
         result = '\n'.join(result)
         return result.decode(encoding)
 
@@ -197,9 +197,16 @@ class SetupWalker(object):
 
 def from_setup_py(setup_file):
     try:
+        from astroid import AstroidBuildingException
+    except ImportError:
+        syntax_exceptions = (SyntaxError,)
+    else:
+        syntax_exceptions = (SyntaxError, AstroidBuildingException)
+
+    try:
         contents = _load_file_contents(setup_file)
         ast = AstroidBuilder(MANAGER).string_build(contents)
-    except SyntaxError:
+    except syntax_exceptions:
         # if the setup file is broken, we can't do much about that...
         raise CouldNotParseRequirements
 

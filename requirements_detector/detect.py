@@ -58,7 +58,7 @@ def _load_file_contents(filepath):
             else:
                 encoding = match.group(1)
 
-        result += [line.strip() for line in contents[2:]]
+        result += [line.rstrip() for line in contents[2:]]
         result = '\n'.join(result)
         return result.decode(encoding)
 

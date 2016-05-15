@@ -4,7 +4,7 @@ from setuptools import find_packages
 import sys
 
 
-_version = "0.4.1"
+_version = "0.5.1"
 _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
 
 _short_description = "Python tool to find and list requirements of a Python project"

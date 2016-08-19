@@ -1,1 +1,2 @@
 include bin/detect-requirements
+include LICENSE

@@ -216,7 +216,7 @@ def from_setup_py(setup_file):
     for req in walker.get_requires():
         requirements.append(DetectedRequirement.parse(req, setup_file))
 
-    return requirements
+    return [requirement for requirement in requirements if requirement is not None]
 
 
 def from_requirements_txt(requirements_file):

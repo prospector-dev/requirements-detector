@@ -2,7 +2,7 @@
 
 ## Status
 
-[![Latest Version](https://pypip.in/version/requirements-detector/badge.svg?text=version&style=flat)](https://pypi.python.org/pypi/requirements-detector)
+[![Latest Version](https://img.shields.io/pypi/v/requirements-detector.svg?label=version&style=flat)](https://pypi.python.org/pypi/requirements-detector)
 [![Build Status](https://travis-ci.org/landscapeio/requirements-detector.png?branch=master)](https://travis-ci.org/landscapeio/requirements-detector)
 [![Health](https://landscape.io/github/landscapeio/requirements-detector/master/landscape.svg?style=flat)](https://landscape.io/github/landscapeio/requirements-detector/master)
 [![Coverage Status](https://img.shields.io/coveralls/landscapeio/requirements-detector.svg?style=flat)](https://coveralls.io/r/landscapeio/requirements-detector)

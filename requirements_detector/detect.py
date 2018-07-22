@@ -2,7 +2,8 @@ import re
 import os
 import sys
 from astroid.builder import AstroidBuilder
-from astroid import MANAGER, CallFunc, Name, Assign, Keyword, List, Tuple, Const, AssName
+from astroid import MANAGER, Name, Assign, Keyword, List, Tuple, Const
+from requirements_detector.__compat__ import Call, AssignName
 from requirements_detector.requirement import DetectedRequirement
 
 
@@ -130,7 +131,7 @@ class SetupWalker(object):
         node = node or self._ast
 
         # test to see if this is a call to setup()
-        if isinstance(node, CallFunc):
+        if isinstance(node, Call):
             for child_node in node.get_children():
                 if isinstance(child_node, Name) and child_node.name == 'setup':
                     # TODO: what if this isn't actually the distutils setup?
@@ -139,7 +140,7 @@ class SetupWalker(object):
         for child_node in node.get_children():
             if top and isinstance(child_node, Assign):
                 for target in child_node.targets:
-                    if isinstance(target, AssName):
+                    if isinstance(target, AssignName):
                         self._top_level_assigns[target.name] = child_node.value
             self.walk(child_node)
 

@@ -9,7 +9,7 @@ _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
 
 _short_description = "Python tool to find and list requirements of a Python project"
 
-_CLASSIFIERS = (
+_CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
     'Intended Audience :: Developers',
@@ -22,7 +22,7 @@ _CLASSIFIERS = (
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'License :: OSI Approved :: MIT License',
-)
+]
 
 
 if sys.version_info < (2, 7):

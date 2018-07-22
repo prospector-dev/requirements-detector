@@ -32,7 +32,7 @@ if sys.version_info < (2, 7):
     ]
 else:
     _install_requires = [
-        'astroid>=1.4',
+        'astroid>=1.4,<2.0',
     ]
 
 setup(

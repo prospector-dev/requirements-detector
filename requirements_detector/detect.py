@@ -4,8 +4,7 @@ import sys
 from astroid.builder import AstroidBuilder
 from astroid import MANAGER, Name, Assign, Keyword, List, Tuple, Const
 from requirements_detector.__compat__ import Call, AssignName
-from requirements_detector.requirement import DetectedRequirement
-
+from requirements_detector.requirement import DetectedRequirement, PipfileRequirement
 
 __all__ = ['find_requirements',
            'RequirementsNotFound',
@@ -26,6 +25,16 @@ _PIP_OPTIONS = (
     '-f', '--find-links',
     '-r'
 )
+
+_PIPFILE_OPTIONS = [
+    '[[source]]',
+    '[requires]',
+    '[dev-packages]',
+    '[packages]',
+    'url',
+    'verify_ssl',
+    'name',
+]
 
 
 class RequirementsNotFound(Exception):
@@ -99,6 +108,14 @@ def find_requirements(path):
                 requirements += from_requirements_txt(reqfile_path)
             except CouldNotParseRequirements as e:
                 pass
+
+    pipenv_file = os.path.join(path, 'Pipfile')
+    pipenv_path = os.path.join(path, pipenv_file)
+    if os.path.exists(pipenv_file) and os.path.isfile(pipenv_file):
+        try:
+            requirements += from_pipfile(pipenv_path)
+        except CouldNotParseRequirements as e:
+            pass
 
     requirements_dir = os.path.join(path, 'requirements')
     if os.path.exists(requirements_dir) and os.path.isdir(requirements_dir):
@@ -218,6 +235,26 @@ def from_setup_py(setup_file):
         requirements.append(DetectedRequirement.parse(req, setup_file))
 
     return [requirement for requirement in requirements if requirement is not None]
+
+
+def from_pipfile(pipfile):
+
+    requirements = []
+    with open(pipfile) as f:
+        for req in f.readlines():
+            if req.strip() == '':
+                # empty line
+                continue
+            if req.strip().startswith('#'):
+                # comment
+                continue
+            if req.strip().split()[0] in _PIPFILE_OPTIONS:
+                continue
+            detected = PipfileRequirement.parse(req, pipfile)
+            if detected is None:
+                continue
+            requirements.append(detected)
+    return requirements
 
 
 def from_requirements_txt(requirements_file):

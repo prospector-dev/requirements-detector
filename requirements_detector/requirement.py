@@ -146,3 +146,23 @@ class DetectedRequirement(object):
             url = '%s://%s' % (vcs_scheme, url)
 
         return DetectedRequirement(name=name, url=url, location_defined=location_defined)
+
+
+class PipfileRequirement(DetectedRequirement):
+
+    @staticmethod
+    def parse(line, location_defined=None):
+        # fairly simply pipfile parser
+        #
+        # 1) <dependency> = "version_spec"
+        # 2) "<dependency>" = "version_spec"
+        line = line.strip()
+        line = line.replace('"', '')
+        line = line.replace('=', '==')  # just make it look like a requirements.txt
+        try:
+            req = Requirement.parse(line)
+        except ValueError:
+            # this happens if the line is invalid
+            return None
+        else:
+            return DetectedRequirement(requirement=req, location_defined=location_defined)

@@ -30,6 +30,11 @@ if sys.version_info < (2, 7):
     _install_requires = [
         'astroid>=1.0,<1.3.0',
     ]
+elif sys.version_info < (3, 0):
+    # astroid 2.x is Python 3 only
+    _install_requires = [
+        'astroid>=1.4,<2.0',
+    ]
 else:
     _install_requires = [
         'astroid>=1.4',

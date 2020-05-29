@@ -8,6 +8,9 @@ from requirements_detector.requirement import DetectedRequirement
 
 
 __all__ = ['find_requirements',
+           'from_requirements_txt',
+           'from_requirements_dir',
+           'from_setup_py',
            'RequirementsNotFound',
            'CouldNotParseRequirements']
 

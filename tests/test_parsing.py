@@ -25,6 +25,7 @@ class TestRequirementParsing(TestCase):
         self._test('Django', 'django')
         self._test('celery', 'celery')
 
+
     def test_requirement_with_versions(self):
         self._test('Django==1.5.2', 'django', [('==', '1.5.2')])
         self._test('South>0.8', 'south', [('>', '0.8')])
@@ -52,6 +53,24 @@ class TestRequirementParsing(TestCase):
     def test_editable_vcs_url(self):
         self._test('--editable git+ssh://git@github.com/something/somelib.git#egg=somelib',
                    name='somelib', url='git+ssh://git@github.com/something/somelib.git')
+
+    def test_comments(self):
+        self._test('celery == 0.1 # comment', 'celery', [('==', '0.1')])
+        self._test('celery == 0.1\t# comment', 'celery', [('==', '0.1')])
+        self._test(
+            "somelib == 0.15 # pinned to 0.15 (https://github.com/owner/repo/issues/111)",
+            "somelib",
+            [("==", "0.15")]
+        )
+        self._test(
+            'http://example.com/somelib.tar.gz # comment',
+            url='http://example.com/somelib.tar.gz'
+        )
+        self._test(
+            'http://example.com/somelib.tar.gz#egg=somelib # url comment http://foo.com/bar',
+            name='somelib',
+            url='http://example.com/somelib.tar.gz'
+        )
 
 
 class TestEggFragmentParsing(TestCase):

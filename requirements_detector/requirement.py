@@ -113,6 +113,12 @@ class DetectedRequirement(object):
         # 7) (-e|--editable) <vcs_url>#egg=<dependency_name>
         line = line.strip()
 
+        # We need to match whitespace + # because url based requirements specify
+        # egg_name after a '#'
+        comment_pos = re.search(r'\s#', line)
+        if comment_pos:
+            line = line[:comment_pos.start()]
+
         # strip the editable flag
         line = re.sub('^(-e|--editable) ', '', line)
 

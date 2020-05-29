@@ -7,27 +7,31 @@ from requirements_detector.__compat__ import Call, AssignName
 from requirements_detector.requirement import DetectedRequirement
 
 
-__all__ = ['find_requirements',
-           'from_requirements_txt',
-           'from_requirements_dir',
-           'from_setup_py',
-           'RequirementsNotFound',
-           'CouldNotParseRequirements']
+__all__ = [
+    "find_requirements",
+    "from_requirements_txt",
+    "from_requirements_dir",
+    "from_setup_py",
+    "RequirementsNotFound",
+    "CouldNotParseRequirements",
+]
 
 
 # PEP263, see http://legacy.python.org/dev/peps/pep-0263/
-_ENCODING_REGEXP = re.compile(r'coding[:=]\s*([-\w.]+)')
+_ENCODING_REGEXP = re.compile(r"coding[:=]\s*([-\w.]+)")
 
 
 _PY3K = sys.version_info >= (3, 0)
 
 
 _PIP_OPTIONS = (
-    '-i', '--index-url',
-    '--extra-index-url',
-    '--no-index',
-    '-f', '--find-links',
-    '-r'
+    "-i",
+    "--index-url",
+    "--extra-index-url",
+    "--no-index",
+    "-f",
+    "--find-links",
+    "-r",
 )
 
 
@@ -49,12 +53,12 @@ def _load_file_contents(filepath):
     with open(filepath) as f:
         if _PY3K:
             return f.read()
-        
+
         contents = f.readlines()
 
         result = []
         encoding_lines = contents[0:2]
-        encoding = 'utf-8'
+        encoding = "utf-8"
         for line in encoding_lines:
             match = _ENCODING_REGEXP.search(line)
             if match is None:
@@ -63,7 +67,7 @@ def _load_file_contents(filepath):
                 encoding = match.group(1)
 
         result += [line.rstrip() for line in contents[2:]]
-        result = '\n'.join(result)
+        result = "\n".join(result)
         return result.decode(encoding)
 
 
@@ -86,7 +90,7 @@ def find_requirements(path):
     """
     requirements = []
 
-    setup_py = os.path.join(path, 'setup.py')
+    setup_py = os.path.join(path, "setup.py")
     if os.path.exists(setup_py) and os.path.isfile(setup_py):
         try:
             requirements = from_setup_py(setup_py)
@@ -95,7 +99,7 @@ def find_requirements(path):
         except CouldNotParseRequirements:
             pass
 
-    for reqfile_name in ('requirements.txt', 'requirements.pip'):
+    for reqfile_name in ("requirements.txt", "requirements.pip"):
         reqfile_path = os.path.join(path, reqfile_name)
         if os.path.exists(reqfile_path) and os.path.isfile(reqfile_path):
             try:
@@ -103,7 +107,7 @@ def find_requirements(path):
             except CouldNotParseRequirements as e:
                 pass
 
-    requirements_dir = os.path.join(path, 'requirements')
+    requirements_dir = os.path.join(path, "requirements")
     if os.path.exists(requirements_dir) and os.path.isdir(requirements_dir):
         from_dir = from_requirements_dir(requirements_dir)
         if from_dir is not None:
@@ -122,7 +126,6 @@ def find_requirements(path):
 
 
 class SetupWalker(object):
-
     def __init__(self, ast):
         self._ast = ast
         self._setup_call = None
@@ -136,7 +139,7 @@ class SetupWalker(object):
         # test to see if this is a call to setup()
         if isinstance(node, Call):
             for child_node in node.get_children():
-                if isinstance(child_node, Name) and child_node.name == 'setup':
+                if isinstance(child_node, Name) and child_node.name == "setup":
                     # TODO: what if this isn't actually the distutils setup?
                     self._setup_call = node
 
@@ -168,7 +171,7 @@ class SetupWalker(object):
                 # do we want to try to handle positional arguments?
                 continue
 
-            if child_node.arg not in ('install_requires', 'requires'):
+            if child_node.arg not in ("install_requires", "requires"):
                 continue
 
             if isinstance(child_node.value, (List, Tuple)):
@@ -228,10 +231,10 @@ def from_requirements_txt(requirements_file):
     requirements = []
     with open(requirements_file) as f:
         for req in f.readlines():
-            if req.strip() == '':
+            if req.strip() == "":
                 # empty line
                 continue
-            if req.strip().startswith('#'):
+            if req.strip().startswith("#"):
                 # this is a comment
                 continue
             if req.strip().split()[0] in _PIP_OPTIONS:
@@ -251,7 +254,7 @@ def from_requirements_dir(path):
         filepath = os.path.join(path, entry)
         if not os.path.isfile(filepath):
             continue
-        if entry.endswith('.txt') or entry.endswith('.pip'):
+        if entry.endswith(".txt") or entry.endswith(".pip"):
             # TODO: deal with duplicates
             requirements += from_requirements_txt(filepath)
 
@@ -265,10 +268,10 @@ def from_requirements_blob(path):
         filepath = os.path.join(path, entry)
         if not os.path.isfile(filepath):
             continue
-        m = re.match(r'^(\w*)req(uirement)?s(\w*)\.txt$', entry)
+        m = re.match(r"^(\w*)req(uirement)?s(\w*)\.txt$", entry)
         if m is None:
             continue
-        if m.group(1).startswith('test') or m.group(3).endswith('test'):
+        if m.group(1).startswith("test") or m.group(3).endswith("test"):
             continue
         requirements += from_requirements_txt(filepath)
 

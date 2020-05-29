@@ -3,14 +3,12 @@
 # translated to new.
 
 try:
-	from astroid import Call
+    from astroid import Call
 except ImportError:
-	from astroid import CallFunc as Call
+    from astroid import CallFunc as Call
 
 
 try:
-	from astroid import AssignName
+    from astroid import AssignName
 except ImportError:
-	from astroid import AssName as AssignName
-
-
+    from astroid import AssName as AssignName

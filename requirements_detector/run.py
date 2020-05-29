@@ -27,10 +27,10 @@ def run():
     except RequirementsNotFound:
         _die("Unable to find requirements at %s" % path)
 
-    format_name = 'requirements_file'  # TODO: other output formats such as JSON
+    format_name = "requirements_file"  # TODO: other output formats such as JSON
     FORMATTERS[format_name](requirements)
     sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

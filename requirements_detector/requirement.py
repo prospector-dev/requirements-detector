@@ -21,7 +21,7 @@ except ImportError:
 
 def _is_filepath(req):
     # this is (probably) a file
-    return os.path.sep in req or req.startswith('.')
+    return os.path.sep in req or req.startswith(".")
 
 
 def _parse_egg_name(url_fragment):
@@ -31,12 +31,12 @@ def _parse_egg_name(url_fragment):
     >>> _parse_egg_name('something_spurious')
     None
     """
-    if '=' not in url_fragment:
+    if "=" not in url_fragment:
         return None
     parts = urlparse.parse_qs(url_fragment)
-    if 'egg' not in parts:
+    if "egg" not in parts:
         return None
-    return parts['egg'][0]  # taking the first value mimics pip's behaviour
+    return parts["egg"][0]  # taking the first value mimics pip's behaviour
 
 
 def _strip_fragment(urlparts):
@@ -46,13 +46,12 @@ def _strip_fragment(urlparts):
         urlparts.path,
         urlparts.params,
         urlparts.query,
-        None
+        None,
     )
     return urlparse.urlunparse(new_urlparts)
 
 
 class DetectedRequirement(object):
-
     def __init__(self, name=None, url=None, requirement=None, location_defined=None):
         if requirement is not None:
             self.name = requirement.key
@@ -67,12 +66,14 @@ class DetectedRequirement(object):
         self.location_defined = location_defined
 
     def _format_specs(self):
-        return ','.join(['%s%s' % (comp, version) for comp, version in self.version_specs])
+        return ",".join(
+            ["%s%s" % (comp, version) for comp, version in self.version_specs]
+        )
 
     def pip_format(self):
         if self.url:
             if self.name:
-                return '%s#egg=%s' % (self.url, self.name)
+                return "%s#egg=%s" % (self.url, self.name)
             return self.url
         if self.name:
             if self.version_specs:
@@ -80,22 +81,28 @@ class DetectedRequirement(object):
             return self.name
 
     def __str__(self):
-        rep = self.name or 'Unknown'
+        rep = self.name or "Unknown"
         if self.version_specs:
-            specs = ','.join(['%s%s' % (comp, version) for comp, version in self.version_specs])
-            rep = '%s%s' % (rep, specs)
+            specs = ",".join(
+                ["%s%s" % (comp, version) for comp, version in self.version_specs]
+            )
+            rep = "%s%s" % (rep, specs)
         if self.url:
-            rep = '%s (%s)' % (rep, self.url)
+            rep = "%s (%s)" % (rep, self.url)
         return rep
 
     def __hash__(self):
         return hash(str(self.name) + str(self.url) + str(self.version_specs))
 
     def __repr__(self):
-        return 'DetectedRequirement:%s' % str(self)
+        return "DetectedRequirement:%s" % str(self)
 
     def __eq__(self, other):
-        return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
+        return (
+            self.name == other.name
+            and self.url == other.url
+            and self.version_specs == other.version_specs
+        )
 
     def __gt__(self, other):
         return (self.name or "") > (other.name or "")
@@ -115,26 +122,26 @@ class DetectedRequirement(object):
 
         # We need to match whitespace + # because url based requirements specify
         # egg_name after a '#'
-        comment_pos = re.search(r'\s#', line)
+        comment_pos = re.search(r"\s#", line)
         if comment_pos:
-            line = line[:comment_pos.start()]
+            line = line[: comment_pos.start()]
 
         # strip the editable flag
-        line = re.sub('^(-e|--editable) ', '', line)
+        line = re.sub("^(-e|--editable) ", "", line)
 
         url = urlparse.urlparse(line)
 
         # if it is a VCS URL, then we want to strip off the protocol as urlparse
         # might not handle it correctly
         vcs_scheme = None
-        if '+' in url.scheme or url.scheme in ('git',):
-            if url.scheme == 'git':
-                vcs_scheme = 'git+git'
+        if "+" in url.scheme or url.scheme in ("git",):
+            if url.scheme == "git":
+                vcs_scheme = "git+git"
             else:
                 vcs_scheme = url.scheme
-            url = urlparse.urlparse(re.sub(r'^%s://' % re.escape(url.scheme), '', line))
+            url = urlparse.urlparse(re.sub(r"^%s://" % re.escape(url.scheme), "", line))
 
-        if vcs_scheme is None and url.scheme == '' and not _is_filepath(line):
+        if vcs_scheme is None and url.scheme == "" and not _is_filepath(line):
             # if we are here, it is a simple dependency
             try:
                 req = Requirement.parse(line)
@@ -142,13 +149,17 @@ class DetectedRequirement(object):
                 # this happens if the line is invalid
                 return None
             else:
-                return DetectedRequirement(requirement=req, location_defined=location_defined)
+                return DetectedRequirement(
+                    requirement=req, location_defined=location_defined
+                )
 
         # otherwise, this is some kind of URL
         name = _parse_egg_name(url.fragment)
         url = _strip_fragment(url)
 
         if vcs_scheme:
-            url = '%s://%s' % (vcs_scheme, url)
+            url = "%s://%s" % (vcs_scheme, url)
 
-        return DetectedRequirement(name=name, url=url, location_defined=location_defined)
+        return DetectedRequirement(
+            name=name, url=url, location_defined=location_defined
+        )

@@ -47,3 +47,12 @@ celery>=2.2,<3
 >>> find_requirements(os.getcwd())
 [DetectedRequirement:Django==1.5.2, DetectedRequirement:South>=0.8, ...]
 ```
+
+
+If you know the relevant file or directory,  you can use `from_requirements_txt`, `from_setup_py` or `from_requirements_dir` directly.
+
+```
+>>> from requirements_detector import from_requirements_txt
+>>> from_requirements_txt("/path/to/requirements.txt")
+[DetectedRequirement:Django==1.5.2, DetectedRequirement:South>=0.8, ...]
+```

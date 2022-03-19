@@ -1,6 +1,6 @@
-import os
 import re
-import sys
+from pathlib import Path
+from typing import List
 
 from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py
@@ -10,13 +10,11 @@ __all__ = [
     "find_requirements",
     "from_requirements_txt",
     "from_requirements_dir",
+    "from_requirements_blob",
     "from_setup_py",
     "RequirementsNotFound",
     "CouldNotParseRequirements",
 ]
-
-
-_PY3K = sys.version_info >= (3, 0)
 
 
 _PIP_OPTIONS = (
@@ -30,7 +28,7 @@ _PIP_OPTIONS = (
 )
 
 
-def find_requirements(path):
+def find_requirements(path: Path) -> List[DetectedRequirement]:
     """
     This method tries to determine the requirements of a particular project
     by inspecting the possible places that they could be defined.
@@ -49,25 +47,25 @@ def find_requirements(path):
     """
     requirements = []
 
-    setup_py = os.path.join(path, "setup.py")
-    if os.path.exists(setup_py) and os.path.isfile(setup_py):
+    setup_py = path / "setup.py"
+    if path.exists() and path.is_file():
         try:
-            requirements = from_setup_py(setup_py)
+            # requirements = from_setup_py(setup_py)
             requirements.sort()
             return requirements
         except CouldNotParseRequirements:
             pass
 
     for reqfile_name in ("requirements.txt", "requirements.pip"):
-        reqfile_path = os.path.join(path, reqfile_name)
-        if os.path.exists(reqfile_path) and os.path.isfile(reqfile_path):
+        reqfile = path / reqfile_name
+        if reqfile.exists and reqfile.is_file():
             try:
-                requirements += from_requirements_txt(reqfile_path)
+                requirements += from_requirements_txt(reqfile)
             except CouldNotParseRequirements as e:
                 pass
 
-    requirements_dir = os.path.join(path, "requirements")
-    if os.path.exists(requirements_dir) and os.path.isdir(requirements_dir):
+    requirements_dir = path / "requirements"
+    if requirements_dir.exists() and requirements_dir.is_dir():
         from_dir = from_requirements_dir(requirements_dir)
         if from_dir is not None:
             requirements += from_dir
@@ -84,10 +82,10 @@ def find_requirements(path):
     raise RequirementsNotFound
 
 
-def from_requirements_txt(requirements_file):
+def from_requirements_txt(requirements_file: Path) -> List[DetectedRequirement]:
     # see http://www.pip-installer.org/en/latest/logic.html
     requirements = []
-    with open(requirements_file) as f:
+    with requirements_file.open() as f:
         for req in f.readlines():
             if req.strip() == "":
                 # empty line
@@ -106,31 +104,28 @@ def from_requirements_txt(requirements_file):
     return requirements
 
 
-def from_requirements_dir(path):
+def from_requirements_dir(path: Path) -> List[DetectedRequirement]:
     requirements = []
-    for entry in os.listdir(path):
-        filepath = os.path.join(path, entry)
-        if not os.path.isfile(filepath):
+    for entry in path.iterdir():
+        if not entry.is_file():
             continue
-        if entry.endswith(".txt") or entry.endswith(".pip"):
-            # TODO: deal with duplicates
-            requirements += from_requirements_txt(filepath)
+        if entry.name.endswith(".txt") or entry.name.endswith(".pip"):
+            requirements += from_requirements_txt(entry)
 
-    return requirements
+    return list(set(requirements))
 
 
-def from_requirements_blob(path):
+def from_requirements_blob(path: Path) -> List[DetectedRequirement]:
     requirements = []
 
-    for entry in os.listdir(path):
-        filepath = os.path.join(path, entry)
-        if not os.path.isfile(filepath):
+    for entry in path.iterdir():
+        if not entry.is_file():
             continue
-        m = re.match(r"^(\w*)req(uirement)?s(\w*)\.txt$", entry)
+        m = re.match(r"^(\w*)req(uirement)?s(\w*)\.txt$", entry.name)
         if m is None:
             continue
         if m.group(1).startswith("test") or m.group(3).endswith("test"):
             continue
-        requirements += from_requirements_txt(filepath)
+        requirements += from_requirements_txt(entry)
 
     return requirements

@@ -1,10 +1,5 @@
-try:
-    import urlparse
-except ImportError:
-    # python3
-    from urllib import parse as urlparse
-
 from unittest import TestCase
+from urllib import parse as urlparse
 
 from requirements_detector.requirement import (
     DetectedRequirement,

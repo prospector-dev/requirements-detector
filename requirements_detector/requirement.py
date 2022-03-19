@@ -10,14 +10,10 @@ list.
 """
 import os
 import re
+from pathlib import Path
+from urllib import parse
 
 from pkg_resources import Requirement
-
-try:
-    import urlparse
-except ImportError:
-    # python3
-    from urllib import parse as urlparse
 
 
 def _is_filepath(req):
@@ -34,7 +30,7 @@ def _parse_egg_name(url_fragment):
     """
     if "=" not in url_fragment:
         return None
-    parts = urlparse.parse_qs(url_fragment)
+    parts = parse.parse_qs(url_fragment)
     if "egg" not in parts:
         return None
     return parts["egg"][0]  # taking the first value mimics pip's behaviour
@@ -49,11 +45,11 @@ def _strip_fragment(urlparts):
         urlparts.query,
         None,
     )
-    return urlparse.urlunparse(new_urlparts)
+    return parse.urlunparse(new_urlparts)
 
 
-class DetectedRequirement(object):
-    def __init__(self, name=None, url=None, requirement=None, location_defined=None):
+class DetectedRequirement:
+    def __init__(self, name: str = None, url: str = None, requirement: str = None, location_defined: Path = None):
         if requirement is not None:
             self.name = requirement.key
             self.requirement = requirement
@@ -66,10 +62,10 @@ class DetectedRequirement(object):
             self.requirement = None
         self.location_defined = location_defined
 
-    def _format_specs(self):
+    def _format_specs(self) -> str:
         return ",".join(["%s%s" % (comp, version) for comp, version in self.version_specs])
 
-    def pip_format(self):
+    def pip_format(self) -> str:
         if self.url:
             if self.name:
                 return "%s#egg=%s" % (self.url, self.name)
@@ -101,7 +97,7 @@ class DetectedRequirement(object):
         return (self.name or "") > (other.name or "")
 
     @staticmethod
-    def parse(line, location_defined=None):
+    def parse(line, location_defined: Path = None) -> "DetectedRequirement":
         # the options for a Pip requirements file are:
         #
         # 1) <dependency_name>
@@ -122,7 +118,7 @@ class DetectedRequirement(object):
         # strip the editable flag
         line = re.sub("^(-e|--editable) ", "", line)
 
-        url = urlparse.urlparse(line)
+        url = parse.urlparse(line)
 
         # if it is a VCS URL, then we want to strip off the protocol as urlparse
         # might not handle it correctly
@@ -132,7 +128,7 @@ class DetectedRequirement(object):
                 vcs_scheme = "git+git"
             else:
                 vcs_scheme = url.scheme
-            url = urlparse.urlparse(re.sub(r"^%s://" % re.escape(url.scheme), "", line))
+            url = parse.urlparse(re.sub(r"^%s://" % re.escape(url.scheme), "", line))
 
         if vcs_scheme is None and url.scheme == "" and not _is_filepath(line):
             # if we are here, it is a simple dependency

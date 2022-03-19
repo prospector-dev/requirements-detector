@@ -1,26 +1,28 @@
 import os
 import sys
+from pathlib import Path
+from typing import NoReturn
 
-from requirements_detector import find_requirements
-from requirements_detector.detect import RequirementsNotFound
-from requirements_detector.formatters import FORMATTERS
+from . import find_requirements
+from .exceptions import RequirementsNotFound
+from .formatters import FORMATTERS
 
 
-def _die(message):
+def _die(message) -> NoReturn:
     sys.stderr.write("%s\n" % message)
     sys.exit(1)
 
 
-def run():
+def run() -> NoReturn:
     if len(sys.argv) > 1:
-        path = sys.argv[1]
+        path = Path(sys.argv[1])
     else:
-        path = os.getcwd()
+        path = Path.cwd()
 
-    if not os.path.exists(path):
+    if not path.exists():
         _die("%s does not exist" % path)
 
-    if not os.path.isdir(path):
+    if not path.is_dir():
         _die("%s is not a directory" % path)
 
     try:

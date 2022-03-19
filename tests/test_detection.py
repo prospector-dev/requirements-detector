@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from unittest import TestCase
 
 from requirements_detector.detect import (
@@ -10,13 +10,15 @@ from requirements_detector.detect import (
 )
 from requirements_detector.requirement import DetectedRequirement
 
+_TEST_DIR = Path(__file__).parent / 'detection'
+
 
 class DependencyDetectionTest(TestCase):
     def _expected(self, *requirements):
         return [DetectedRequirement.parse(req) for req in requirements]
 
     def test_requirements_txt_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), "detection/test1/requirements.txt")
+        filepath = _TEST_DIR / 'test1/requirements.txt'
         dependencies = from_requirements_txt(filepath)
 
         expected = self._expected(
@@ -29,7 +31,7 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(expected, sorted(dependencies))
 
     def test_requirements_dir_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), "detection/test2/requirements")
+        filepath = _TEST_DIR / "test2/requirements"
         dependencies = from_requirements_dir(filepath)
 
         expected = self._expected(
@@ -42,7 +44,7 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(expected, sorted(dependencies))
 
     def test_requirements_blob_parsing(self):
-        filepath = os.path.join(os.path.dirname(__file__), "detection/test3")
+        filepath = _TEST_DIR / "test3"
         dependencies = from_requirements_blob(filepath)
 
         expected = self._expected(
@@ -54,23 +56,24 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(expected, sorted(dependencies))
 
     def test_invalid_requirements_txt(self):
-        filepath = os.path.join(os.path.dirname(__file__), "detection/test5/invalid_requirements.txt")
+        filepath = _TEST_DIR / "test5/invalid_requirements.txt"
         dependencies = from_requirements_txt(filepath)
         expected = self._expected("django<1.6", "django")
         self.assertEqual(expected, sorted(dependencies))
 
-    def test_invalid_requirements_txt(self):
-        filepath = os.path.join(os.path.dirname(__file__), "detection/test6/requirements.txt")
-        from_requirements_txt(filepath)
+    def test_requirements_txt(self):
+        filepath = _TEST_DIR / "test6/requirements.txt"
+        reqs = from_requirements_txt(filepath)
+        self.assertTrue(len(reqs) > 0)
 
     def _test_setup_py(self, setup_py_file, *expected):
-        filepath = os.path.join(os.path.dirname(__file__), "detection/test4", setup_py_file)
+        filepath = _TEST_DIR / 'test4' / setup_py_file
         dependencies = from_setup_py(filepath)
         expected = self._expected(*expected)
         self.assertEqual(expected, sorted(dependencies))
 
     def _test_setup_py_not_parseable(self, setup_py_file):
-        filepath = os.path.join(os.path.dirname(__file__), "detection/test4", setup_py_file)
+        filepath = _TEST_DIR / 'test4' / setup_py_file
         self.assertRaises(CouldNotParseRequirements, from_setup_py, filepath)
 
     def test_simple_setup_py_parsing(self):

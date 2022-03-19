@@ -1,43 +1,14 @@
-import re
+from pathlib import Path
 
-from astroid import MANAGER, Assign, Const, Keyword, List, Name, Tuple
+from astroid import MANAGER, AstroidBuildingException, AstroidSyntaxError
 from astroid.builder import AstroidBuilder
+from astroid.nodes import Assign, AssignName, Call, Const, Keyword, List, Name, Tuple
 
-from requirements_detector.__compat__ import AssignName, Call
-
-# PEP263, see http://legacy.python.org/dev/peps/pep-0263/
-_ENCODING_REGEXP = re.compile(r"coding[:=]\s*([-\w.]+)")
-
-
-def _load_file_contents(filepath):
-    # This function is a bit of a tedious workaround (AKA 'hack').
-    # Astroid calls 'compile' under the hood, which refuses to accept a Unicode
-    # object which contains a PEP-263 encoding definition. However if we give
-    # Astroid raw bytes, it'll assume ASCII. Therefore we need to detect the encoding
-    # here, convert the file contents to a Unicode object, *and also strip the encoding
-    # declaration* to avoid the compile step breaking.
-    with open(filepath) as f:
-        if _PY3K:
-            return f.read()
-
-        contents = f.readlines()
-
-        result = []
-        encoding_lines = contents[0:2]
-        encoding = "utf-8"
-        for line in encoding_lines:
-            match = _ENCODING_REGEXP.search(line)
-            if match is None:
-                result.append(line.strip())
-            else:
-                encoding = match.group(1)
-
-        result += [line.rstrip() for line in contents[2:]]
-        result = "\n".join(result)
-        return result.decode(encoding)
+from .exceptions import CouldNotParseRequirements
+from .requirement import DetectedRequirement
 
 
-class SetupWalker(object):
+class SetupWalker:
     def __init__(self, ast):
         self._ast = ast
         self._setup_call = None
@@ -114,18 +85,11 @@ class SetupWalker(object):
         raise CouldNotParseRequirements
 
 
-def from_setup_py(setup_file):
-    try:
-        from astroid import AstroidBuildingException
-    except ImportError:
-        syntax_exceptions = (SyntaxError,)
-    else:
-        syntax_exceptions = (SyntaxError, AstroidBuildingException)
+def from_setup_py(setup_file: Path):
 
     try:
-        contents = _load_file_contents(setup_file)
-        ast = AstroidBuilder(MANAGER).string_build(contents)
-    except syntax_exceptions:
+        ast = AstroidBuilder(MANAGER).string_build(setup_file.open().read())
+    except (SyntaxError, AstroidBuildingException, AstroidSyntaxError):
         # if the setup file is broken, we can't do much about that...
         raise CouldNotParseRequirements
 

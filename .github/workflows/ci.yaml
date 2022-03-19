@@ -187,6 +187,12 @@ jobs:
           python -m pip install --disable-pip-version-check -U pip poetry
           poetry install
           nosetests -s --with-coverage --cover-package requirements_detector --cover-inclusive
+      - name: Check it can actually run
+        run: |
+          . venv/bin/activate
+          python -m pip install --disable-pip-version-check -U pip poetry
+          poetry install
+          requirements-detector
       - name: Build and validate packages
         run: |
           . venv/bin/activate

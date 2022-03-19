@@ -33,6 +33,9 @@ requirements-detector = 'requirements_detector.run:run'
 [tool.poetry.dependencies]
 python = "^3.7"
 astroid = "^2.0"
+packaging = "^21.3"
+toml = "^0.10.2"
+poetry-semver = "==0.1.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.24.5"

@@ -2,6 +2,9 @@ import re
 from pathlib import Path
 from typing import List
 
+import toml
+from semver import parse_constraint
+
 from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py
 from .requirement import DetectedRequirement
@@ -50,7 +53,7 @@ def find_requirements(path: Path) -> List[DetectedRequirement]:
     setup_py = path / "setup.py"
     if path.exists() and path.is_file():
         try:
-            # requirements = from_setup_py(setup_py)
+            requirements = from_setup_py(setup_py)
             requirements.sort()
             return requirements
         except CouldNotParseRequirements:
@@ -80,6 +83,21 @@ def find_requirements(path: Path) -> List[DetectedRequirement]:
         return requirements
 
     raise RequirementsNotFound
+
+
+def from_pyproject_toml(toml_file: Path) -> List[DetectedRequirement]:
+    requirements = []
+    parsed = toml.load(toml_file)
+    dependencies = parsed.get("tool", {}).get("poetry", {}).get("dependencies", [])
+    for name, spec in dependencies.items():
+        if name.lower() == "python":
+            continue
+        parsed = str(parse_constraint(spec))
+        if "," not in parsed:
+            parsed = f"=={parsed}"
+        requirements.append(DetectedRequirement.parse(f"{name}{parsed}", toml_file))
+
+    return requirements
 
 
 def from_requirements_txt(requirements_file: Path) -> List[DetectedRequirement]:

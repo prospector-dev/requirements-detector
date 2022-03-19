@@ -20,12 +20,12 @@ class TestRequirementParsing(TestCase):
         self.assertEqual(url, req.url)
 
     def test_basic_requirement(self):
-        self._test("Django", "django")
+        self._test("Django", "Django")
         self._test("celery", "celery")
 
     def test_requirement_with_versions(self):
-        self._test("Django==1.5.2", "django", [("==", "1.5.2")])
-        self._test("South>0.8", "south", [(">", "0.8")])
+        self._test("Django==1.5.2", "Django", [("==", "1.5.2")])
+        self._test("South>0.8", "South", [(">", "0.8")])
         self._test("django-gubbins!=1.1.1,>1.1", "django-gubbins", [("!=", "1.1.1"), (">", "1.1")])
 
     def test_relative_file_path(self):

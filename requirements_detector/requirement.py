@@ -13,7 +13,7 @@ import re
 from pathlib import Path
 from urllib import parse
 
-from pkg_resources import Requirement
+from packaging.requirements import Requirement
 
 
 def _is_filepath(req):
@@ -49,11 +49,13 @@ def _strip_fragment(urlparts):
 
 
 class DetectedRequirement:
-    def __init__(self, name: str = None, url: str = None, requirement: str = None, location_defined: Path = None):
+    def __init__(
+        self, name: str = None, url: str = None, requirement: Requirement = None, location_defined: Path = None
+    ):
         if requirement is not None:
-            self.name = requirement.key
+            self.name = requirement.name
             self.requirement = requirement
-            self.version_specs = requirement.specs
+            self.version_specs = [(s.operator, s.version) for s in requirement.specifier]
             self.url = None
         else:
             self.name = name
@@ -78,7 +80,7 @@ class DetectedRequirement:
     def __str__(self):
         rep = self.name or "Unknown"
         if self.version_specs:
-            specs = ",".join(["%s%s" % (comp, version) for comp, version in self.version_specs])
+            specs = ",".join(["%s%s" % (comp, ver) for comp, ver in self.version_specs])
             rep = "%s%s" % (rep, specs)
         if self.url:
             rep = "%s (%s)" % (rep, self.url)
@@ -88,7 +90,7 @@ class DetectedRequirement:
         return hash(str(self.name) + str(self.url) + str(self.version_specs))
 
     def __repr__(self):
-        return "DetectedRequirement:%s" % str(self)
+        return "<DetectedRequirement:%s>" % str(self)
 
     def __eq__(self, other):
         return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
@@ -109,6 +111,10 @@ class DetectedRequirement:
         # 7) (-e|--editable) <vcs_url>#egg=<dependency_name>
         line = line.strip()
 
+        if line.startswith("--hash=sha256:"):
+            # skip multi-line shas, produced by poetry export
+            return None
+
         # We need to match whitespace + # because url based requirements specify
         # egg_name after a '#'
         comment_pos = re.search(r"\s#", line)
@@ -117,6 +123,9 @@ class DetectedRequirement:
 
         # strip the editable flag
         line = re.sub("^(-e|--editable) ", "", line)
+
+        # remove the python version stuff from poetry files
+        line = line.split(";")[0]
 
         url = parse.urlparse(line)
 
@@ -133,7 +142,7 @@ class DetectedRequirement:
         if vcs_scheme is None and url.scheme == "" and not _is_filepath(line):
             # if we are here, it is a simple dependency
             try:
-                req = Requirement.parse(line)
+                req = Requirement(line)
             except ValueError:
                 # this happens if the line is invalid
                 return None

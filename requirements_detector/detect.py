@@ -1,11 +1,12 @@
-import re
 import os
+import re
 import sys
-from astroid.builder import AstroidBuilder
-from astroid import MANAGER, Name, Assign, Keyword, List, Tuple, Const
-from requirements_detector.__compat__ import Call, AssignName
-from requirements_detector.requirement import DetectedRequirement
 
+from astroid import MANAGER, Assign, Const, Keyword, List, Name, Tuple
+from astroid.builder import AstroidBuilder
+
+from requirements_detector.__compat__ import AssignName, Call
+from requirements_detector.requirement import DetectedRequirement
 
 __all__ = [
     "find_requirements",

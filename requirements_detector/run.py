@@ -1,8 +1,9 @@
 import os
 import sys
+
+from requirements_detector import find_requirements
 from requirements_detector.detect import RequirementsNotFound
 from requirements_detector.formatters import FORMATTERS
-from requirements_detector import find_requirements
 
 
 def _die(message):

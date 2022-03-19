@@ -10,6 +10,7 @@ list.
 """
 import os
 import re
+
 from pkg_resources import Requirement
 
 try:
@@ -66,9 +67,7 @@ class DetectedRequirement(object):
         self.location_defined = location_defined
 
     def _format_specs(self):
-        return ",".join(
-            ["%s%s" % (comp, version) for comp, version in self.version_specs]
-        )
+        return ",".join(["%s%s" % (comp, version) for comp, version in self.version_specs])
 
     def pip_format(self):
         if self.url:
@@ -83,9 +82,7 @@ class DetectedRequirement(object):
     def __str__(self):
         rep = self.name or "Unknown"
         if self.version_specs:
-            specs = ",".join(
-                ["%s%s" % (comp, version) for comp, version in self.version_specs]
-            )
+            specs = ",".join(["%s%s" % (comp, version) for comp, version in self.version_specs])
             rep = "%s%s" % (rep, specs)
         if self.url:
             rep = "%s (%s)" % (rep, self.url)
@@ -98,11 +95,7 @@ class DetectedRequirement(object):
         return "DetectedRequirement:%s" % str(self)
 
     def __eq__(self, other):
-        return (
-            self.name == other.name
-            and self.url == other.url
-            and self.version_specs == other.version_specs
-        )
+        return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
 
     def __gt__(self, other):
         return (self.name or "") > (other.name or "")
@@ -149,9 +142,7 @@ class DetectedRequirement(object):
                 # this happens if the line is invalid
                 return None
             else:
-                return DetectedRequirement(
-                    requirement=req, location_defined=location_defined
-                )
+                return DetectedRequirement(requirement=req, location_defined=location_defined)
 
         # otherwise, this is some kind of URL
         name = _parse_egg_name(url.fragment)
@@ -160,6 +151,4 @@ class DetectedRequirement(object):
         if vcs_scheme:
             url = "%s://%s" % (vcs_scheme, url)
 
-        return DetectedRequirement(
-            name=name, url=url, location_defined=location_defined
-        )
+        return DetectedRequirement(name=name, url=url, location_defined=location_defined)

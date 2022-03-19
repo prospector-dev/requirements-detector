@@ -1,16 +1,12 @@
 sudo: false
 language: python
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
   - "3.7"
   - "3.8"
 install:
   - "pip install nose coverage coveralls"
   - "pip install --editable ."
-script: 
+script:
   nosetests -s --with-coverage --cover-package requirements_detector --cover-inclusive
 after_success:
   coveralls

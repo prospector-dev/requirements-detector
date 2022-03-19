@@ -10,7 +10,7 @@
 
 ## About
 
-`requirements-detector` is a simple Python tool which attempts to find and list the requirements of a Python project. 
+`requirements-detector` is a simple Python tool which attempts to find and list the requirements of a Python project.
 
 When run from the root of a Python project, it will try to ascertain which libraries and the versions of those libraries that the project depends on.
 

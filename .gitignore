@@ -33,7 +33,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
-
+.benchmarks
 .venv
 env.txt
 .idea

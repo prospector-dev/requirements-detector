@@ -91,7 +91,7 @@ class DependencyDetectionTest(TestCase):
 
     def _test_setup_py(self, setup_py_file, *expected):
         filepath = _TEST_DIR / 'test4' / setup_py_file
-        dependencies = from_setup_py(filepath)
+        dependencies = from_setup_py(str(filepath))
         expected = self._expected(*expected)
         self.assertEqual(expected, sorted(dependencies))
 

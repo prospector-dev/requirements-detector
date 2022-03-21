@@ -51,7 +51,7 @@ def find_requirements(path: Path) -> List[DetectedRequirement]:
     requirements = []
 
     setup_py = path / "setup.py"
-    if path.exists() and path.is_file():
+    if setup_py.exists() and setup_py.is_file():
         try:
             requirements = from_setup_py(setup_py)
             requirements.sort()

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Union
 
 from astroid import MANAGER, AstroidBuildingException, AstroidSyntaxError
 from astroid.builder import AstroidBuilder
@@ -85,7 +86,10 @@ class SetupWalker:
         raise CouldNotParseRequirements
 
 
-def from_setup_py(setup_file: Path):
+def from_setup_py(setup_file: Union[str, Path]):
+
+    if isinstance(setup_file, str):
+        setup_file = Path(setup_file)
 
     try:
         ast = AstroidBuilder(MANAGER).string_build(setup_file.open().read())

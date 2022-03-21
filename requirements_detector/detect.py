@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 import toml
 from semver import parse_constraint
@@ -31,7 +31,7 @@ _PIP_OPTIONS = (
 )
 
 
-def find_requirements(path: Path) -> List[DetectedRequirement]:
+def find_requirements(path: Union[str, Path]) -> List[DetectedRequirement]:
     """
     This method tries to determine the requirements of a particular project
     by inspecting the possible places that they could be defined.
@@ -49,6 +49,9 @@ def find_requirements(path: Path) -> List[DetectedRequirement]:
     will be raised
     """
     requirements = []
+
+    if not isinstance(path, str):
+        path = Path(path)
 
     setup_py = path / "setup.py"
     if setup_py.exists() and setup_py.is_file():
@@ -95,8 +98,12 @@ def find_requirements(path: Path) -> List[DetectedRequirement]:
     raise RequirementsNotFound
 
 
-def from_pyproject_toml(toml_file: Path) -> List[DetectedRequirement]:
+def from_pyproject_toml(toml_file: Union[str, Path]) -> List[DetectedRequirement]:
     requirements = []
+
+    if isinstance(toml_file, str):
+        toml_file = Path(toml_file)
+
     parsed = toml.load(toml_file)
     poetry_section = parsed.get("tool", {}).get("poetry", {})
     dependencies = poetry_section.get("dependencies", {})
@@ -115,9 +122,13 @@ def from_pyproject_toml(toml_file: Path) -> List[DetectedRequirement]:
     return requirements
 
 
-def from_requirements_txt(requirements_file: Path) -> List[DetectedRequirement]:
+def from_requirements_txt(requirements_file: Union[str, Path]) -> List[DetectedRequirement]:
     # see http://www.pip-installer.org/en/latest/logic.html
     requirements = []
+
+    if not isinstance(requirements_file, str):
+        requirements_file = Path(requirements_file)
+
     with requirements_file.open() as f:
         for req in f.readlines():
             if req.strip() == "":
@@ -137,8 +148,12 @@ def from_requirements_txt(requirements_file: Path) -> List[DetectedRequirement]:
     return requirements
 
 
-def from_requirements_dir(path: Path) -> List[DetectedRequirement]:
+def from_requirements_dir(path: Union[str, Path]) -> List[DetectedRequirement]:
     requirements = []
+
+    if isinstance(path, str):
+        path = Path(path)
+
     for entry in path.iterdir():
         if not entry.is_file():
             continue
@@ -148,8 +163,11 @@ def from_requirements_dir(path: Path) -> List[DetectedRequirement]:
     return list(set(requirements))
 
 
-def from_requirements_blob(path: Path) -> List[DetectedRequirement]:
+def from_requirements_blob(path: Union[str, Path]) -> List[DetectedRequirement]:
     requirements = []
+
+    if isinstance(path, str):
+        path = Path(path)
 
     for entry in path.iterdir():
         if not entry.is_file():

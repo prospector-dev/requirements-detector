@@ -83,6 +83,8 @@ class DependencyDetectionTest(TestCase):
         self.assertIn('click', names)
         self.assertIn('twine', names)
         self.assertIn('requests', names)
+        self.assertIn('pytest', names)
+        self.assertIn('pyroma', names)
 
     def _test_setup_py(self, setup_py_file, *expected):
         filepath = _TEST_DIR / 'test4' / setup_py_file

@@ -98,10 +98,15 @@ def find_requirements(path: Path) -> List[DetectedRequirement]:
 def from_pyproject_toml(toml_file: Path) -> List[DetectedRequirement]:
     requirements = []
     parsed = toml.load(toml_file)
-    dependencies = parsed.get("tool", {}).get("poetry", {}).get("dependencies", [])
+    poetry_section = parsed.get("tool", {}).get("poetry", {})
+    dependencies = poetry_section.get("dependencies", {})
+    dependencies.update(poetry_section.get("dev-dependencies", {}))
+
     for name, spec in dependencies.items():
         if name.lower() == "python":
             continue
+        if isinstance(spec, dict):
+            spec = spec["version"]
         parsed = str(parse_constraint(spec))
         if "," not in parsed:
             parsed = f"=={parsed}"

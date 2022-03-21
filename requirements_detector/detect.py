@@ -108,7 +108,7 @@ def from_pyproject_toml(toml_file: Path) -> List[DetectedRequirement]:
         if isinstance(spec, dict):
             spec = spec["version"]
         parsed = str(parse_constraint(spec))
-        if "," not in parsed:
+        if "," not in parsed and "<" not in parsed and ">" not in parsed and "=" not in parsed:
             parsed = f"=={parsed}"
         requirements.append(DetectedRequirement.parse(f"{name}{parsed}", toml_file))
 

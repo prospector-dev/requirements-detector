@@ -84,7 +84,10 @@ class DependencyDetectionTest(TestCase):
         self.assertIn('twine', names)
         self.assertIn('requests', names)
         self.assertIn('pytest', names)
-        self.assertIn('pyroma', names)
+
+        pyroma = [req for req in reqs if req.name == 'pyroma'][0]
+        self.assertEqual(2, len(pyroma.version_specs[0]))
+        self.assertEqual('pyroma>=2.4', str(pyroma))
 
     def _test_setup_py(self, setup_py_file, *expected):
         filepath = _TEST_DIR / 'test4' / setup_py_file

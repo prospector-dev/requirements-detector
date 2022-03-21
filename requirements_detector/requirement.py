@@ -11,6 +11,7 @@ list.
 import os
 import re
 from pathlib import Path
+from typing import Optional
 from urllib import parse
 
 from packaging.requirements import Requirement
@@ -76,6 +77,7 @@ class DetectedRequirement:
             if self.version_specs:
                 return "%s%s" % (self.name, self._format_specs())
             return self.name
+        raise ValueError(f"Cannot convert {self} to pip format, no name or URL")
 
     def __str__(self):
         rep = self.name or "Unknown"
@@ -99,7 +101,7 @@ class DetectedRequirement:
         return (self.name or "") > (other.name or "")
 
     @staticmethod
-    def parse(line, location_defined: Path = None) -> "DetectedRequirement":
+    def parse(line, location_defined: Path = None) -> Optional["DetectedRequirement"]:
         # the options for a Pip requirements file are:
         #
         # 1) <dependency_name>

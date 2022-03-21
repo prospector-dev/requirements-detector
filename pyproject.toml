@@ -46,6 +46,7 @@ coverage = "^5.5"
 twine = "^3.8.0"
 pytest-benchmark = "^3.4.1"
 pytest-cov = "^2.12.1"
+types-toml = "^0.10.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

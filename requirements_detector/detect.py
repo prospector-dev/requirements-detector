@@ -14,6 +14,7 @@ __all__ = [
     "from_requirements_txt",
     "from_requirements_dir",
     "from_requirements_blob",
+    "from_pyproject_toml",
     "from_setup_py",
     "RequirementsNotFound",
     "CouldNotParseRequirements",
@@ -31,7 +32,10 @@ _PIP_OPTIONS = (
 )
 
 
-def find_requirements(path: Union[str, Path]) -> List[DetectedRequirement]:
+P = Union[str, Path]
+
+
+def find_requirements(path: P) -> List[DetectedRequirement]:
     """
     This method tries to determine the requirements of a particular project
     by inspecting the possible places that they could be defined.
@@ -98,7 +102,7 @@ def find_requirements(path: Union[str, Path]) -> List[DetectedRequirement]:
     raise RequirementsNotFound
 
 
-def from_pyproject_toml(toml_file: Union[str, Path]) -> List[DetectedRequirement]:
+def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
     requirements = []
 
     if isinstance(toml_file, str):
@@ -114,15 +118,18 @@ def from_pyproject_toml(toml_file: Union[str, Path]) -> List[DetectedRequirement
             continue
         if isinstance(spec, dict):
             spec = spec["version"]
-        parsed = str(parse_constraint(spec))
-        if "," not in parsed and "<" not in parsed and ">" not in parsed and "=" not in parsed:
-            parsed = f"=={parsed}"
-        requirements.append(DetectedRequirement.parse(f"{name}{parsed}", toml_file))
+        parsed_spec = str(parse_constraint(spec))
+        if "," not in parsed_spec and "<" not in parsed_spec and ">" not in parsed_spec and "=" not in parsed_spec:
+            parsed_spec = f"=={parsed_spec}"
+
+        req = DetectedRequirement.parse(f"{name}{parsed_spec}", toml_file)
+        if req is not None:
+            requirements.append(req)
 
     return requirements
 
 
-def from_requirements_txt(requirements_file: Union[str, Path]) -> List[DetectedRequirement]:
+def from_requirements_txt(requirements_file: P) -> List[DetectedRequirement]:
     # see http://www.pip-installer.org/en/latest/logic.html
     requirements = []
 
@@ -148,7 +155,7 @@ def from_requirements_txt(requirements_file: Union[str, Path]) -> List[DetectedR
     return requirements
 
 
-def from_requirements_dir(path: Union[str, Path]) -> List[DetectedRequirement]:
+def from_requirements_dir(path: P) -> List[DetectedRequirement]:
     requirements = []
 
     if isinstance(path, str):
@@ -163,7 +170,7 @@ def from_requirements_dir(path: Union[str, Path]) -> List[DetectedRequirement]:
     return list(set(requirements))
 
 
-def from_requirements_blob(path: Union[str, Path]) -> List[DetectedRequirement]:
+def from_requirements_blob(path: P) -> List[DetectedRequirement]:
     requirements = []
 
     if isinstance(path, str):

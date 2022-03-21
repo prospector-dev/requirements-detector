@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "requirements-detector"
-version = "1.0.2"
+version = "1.0.3"
 authors = ["Landscape.io <code@landscape.io>"]
 classifiers = [
     'Development Status :: 5 - Production/Stable',

@@ -50,7 +50,7 @@ def find_requirements(path: Union[str, Path]) -> List[DetectedRequirement]:
     """
     requirements = []
 
-    if not isinstance(path, str):
+    if isinstance(path, str):
         path = Path(path)
 
     setup_py = path / "setup.py"
@@ -126,7 +126,7 @@ def from_requirements_txt(requirements_file: Union[str, Path]) -> List[DetectedR
     # see http://www.pip-installer.org/en/latest/logic.html
     requirements = []
 
-    if not isinstance(requirements_file, str):
+    if isinstance(requirements_file, str):
         requirements_file = Path(requirements_file)
 
     with requirements_file.open() as f:

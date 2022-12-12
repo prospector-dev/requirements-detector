@@ -117,7 +117,13 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
         if name.lower() == "python":
             continue
         if isinstance(spec, dict):
-            spec = spec["version"]
+            if "version" in spec:
+                spec = spec["version"]
+            else:
+                req = DetectedRequirement.parse(f"{name}", toml_file)
+                if req is not None:
+                    requirements.append(req)
+                    continue
         parsed_spec = str(parse_constraint(spec))
         if "," not in parsed_spec and "<" not in parsed_spec and ">" not in parsed_spec and "=" not in parsed_spec:
             parsed_spec = f"=={parsed_spec}"

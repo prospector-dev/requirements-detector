@@ -11,6 +11,7 @@ requests = ">=2.25,<2.27"
 twine = "~3.8"
 click = "==8.0.4"
 pyroma = {version = ">=2.4", optional = true}
+mytestdependency = {git = "ssh://git@github.com/MyOrg/MyRepo.git",rev = "1.2.3"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

@@ -87,7 +87,6 @@ class SetupWalker:
 
 
 def from_setup_py(setup_file: Union[str, Path]):
-
     if isinstance(setup_file, str):
         setup_file = Path(setup_file)
 

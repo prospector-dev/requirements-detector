@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "requirements-detector"
-version = "1.0.3"
+version = "1.1.0"
 authors = ["Landscape.io <code@landscape.io>"]
 classifiers = [
     'Development Status :: 5 - Production/Stable',
@@ -8,11 +8,11 @@ classifiers = [
     'Intended Audience :: Developers',
     'Operating System :: Unix',
     'Topic :: Software Development :: Quality Assurance',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
     'License :: OSI Approved :: MIT License',
 ]
 license = "MIT"
@@ -32,11 +32,10 @@ include = [
 detect-requirements = 'requirements_detector.run:run'
 
 [tool.poetry.dependencies]
-python = ">=3.6.2,<4.0"
+python = ">=3.7,<4.0"
 astroid = "^2.0"
-packaging = "^21.3"
+packaging = ">=21.3, <23.0"
 toml = "^0.10.2"
-poetry-semver = "==0.1.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.24.5"

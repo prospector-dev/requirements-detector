@@ -3,7 +3,7 @@
 ## Status
 
 [![Latest Version](https://img.shields.io/pypi/v/requirements-detector.svg?label=version&style=flat)](https://pypi.python.org/pypi/requirements-detector)
-[![Build Satus](https://github.com/PyCQA/prospector/actions/workflows/ci.yaml/badge.svg)](https://github.com/PyCQA/prospector/actions/workflows/ci.yaml)
+[![Build Satus](https://github.com/landscapeio/requirements-detector/actions/workflows/ci.yaml/badge.svg)](https://github.com/landscapeio/requirements-detector/actions/workflows/ci.yaml)
 [![Health](https://landscape.io/github/landscapeio/requirements-detector/master/landscape.svg?style=flat)](https://landscape.io/github/landscapeio/requirements-detector/master)
 [![Coverage Status](https://img.shields.io/coveralls/landscapeio/requirements-detector.svg?style=flat)](https://coveralls.io/r/landscapeio/requirements-detector)
 [![Documentation](https://readthedocs.org/projects/requirements-detector/badge/?version=master)](https://readthedocs.org/projects/requirements-detector/)

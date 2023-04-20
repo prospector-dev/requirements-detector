@@ -1,9 +1,11 @@
 import pytest
 
-from requirements_detector.poetry_semver import Version
-from requirements_detector.poetry_semver import VersionRange
-from requirements_detector.poetry_semver import VersionUnion
-from requirements_detector.poetry_semver import parse_constraint
+from requirements_detector.poetry_semver import (
+    Version,
+    VersionRange,
+    VersionUnion,
+    parse_constraint,
+)
 
 
 @pytest.mark.parametrize(

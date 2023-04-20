@@ -1,8 +1,6 @@
 import pytest
 
-from requirements_detector.poetry_semver import EmptyConstraint
-from requirements_detector.poetry_semver import Version
-from requirements_detector.poetry_semver import VersionRange
+from requirements_detector.poetry_semver import EmptyConstraint, Version, VersionRange
 from requirements_detector.poetry_semver.exceptions import ParseVersionError
 
 

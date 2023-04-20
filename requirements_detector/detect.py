@@ -6,9 +6,8 @@ import toml
 
 from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py
-from .requirement import DetectedRequirement
 from .poetry_semver import parse_constraint
-
+from .requirement import DetectedRequirement
 
 __all__ = [
     "find_requirements",

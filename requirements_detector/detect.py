@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List, Union
 
 import toml
-from semver import parse_constraint
+from poetry.core.constraints.version import parse_constraint
 
 from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py

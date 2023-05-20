@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "requirements-detector"
-version = "1.2.1"
+version = "1.2.2"
 authors = ["Landscape.io <code@landscape.io>"]
 classifiers = [
     'Development Status :: 5 - Production/Stable',
@@ -22,10 +22,6 @@ readme = "README.md"
 homepage = "https://github.com/landscapeio/requirements-detector"
 packages = [
   { include = "requirements_detector/"}
-]
-include = [
-  "LICENSE",
-  "README.md"
 ]
 
 [tool.poetry.scripts]

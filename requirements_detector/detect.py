@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-import toml
+import tomllib
 
 from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py
@@ -108,7 +108,8 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
     if isinstance(toml_file, str):
         toml_file = Path(toml_file)
 
-    parsed = toml.load(toml_file)
+    with toml_file.open('rb') as sr:
+        parsed = tomllib.load(sr)
     poetry_section = parsed.get("tool", {}).get("poetry", {})
     dependencies = poetry_section.get("dependencies", {})
     dependencies.update(poetry_section.get("dev-dependencies", {}))

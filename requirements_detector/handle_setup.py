@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Union
 
-from astroid import MANAGER, AstroidBuildingException, AstroidSyntaxError
+from astroid import MANAGER, AstroidSyntaxError
 from astroid.builder import AstroidBuilder
 from astroid.nodes import Assign, AssignName, Call, Const, Keyword, List, Name, Tuple
 
@@ -92,7 +92,7 @@ def from_setup_py(setup_file: Union[str, Path]):
 
     try:
         ast = AstroidBuilder(MANAGER).string_build(setup_file.open().read())
-    except (SyntaxError, AstroidBuildingException, AstroidSyntaxError):
+    except (SyntaxError, AstroidSyntaxError):
         # if the setup file is broken, we can't do much about that...
         raise CouldNotParseRequirements
 

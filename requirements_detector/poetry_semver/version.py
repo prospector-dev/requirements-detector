@@ -16,15 +16,15 @@ class Version(VersionRange):
 
     def __init__(
         self,
-        major,  # type: int
-        minor=None,  # type: Optional[int]
-        patch=None,  # type: Optional[int]
-        rest=None,  # type: Optional[int]
-        pre=None,  # type: Optional[str]
-        build=None,  # type: Optional[str]
-        text=None,  # type: Optional[str]
-        precision=None,  # type: Optional[int]
-    ):  # type: (...) -> None
+        major: int,
+        minor: Optional[int] = None,
+        patch: Optional[int] = None,
+        rest: Optional[int] = None,
+        pre: Optional[str] = None,
+        build: Optional[str] = None,
+        text: Optional[str] = None,
+        precision: Optional[int] = None,
+    ) -> None:
         self._major = int(major)
         self._precision = None
         if precision is None:
@@ -92,27 +92,27 @@ class Version(VersionRange):
             self._build = self._split_parts(build)
 
     @property
-    def major(self):  # type: () -> int
+    def major(self) -> int:
         return self._major
 
     @property
-    def minor(self):  # type: () -> int
+    def minor(self) -> int:
         return self._minor
 
     @property
-    def patch(self):  # type: () -> int
+    def patch(self) -> int:
         return self._patch
 
     @property
-    def rest(self):  # type: () -> int
+    def rest(self) -> int:
         return self._rest
 
     @property
-    def prerelease(self):  # type: () -> List[str]
+    def prerelease(self) -> List[str]:
         return self._prerelease
 
     @property
-    def build(self):  # type: () -> List[str]
+    def build(self) -> List[str]:
         return self._build
 
     @property
@@ -120,7 +120,7 @@ class Version(VersionRange):
         return self._text
 
     @property
-    def precision(self):  # type: () -> int
+    def precision(self) -> int:
         return self._precision
 
     @property
@@ -131,28 +131,28 @@ class Version(VersionRange):
         return self.next_patch
 
     @property
-    def next_major(self):  # type: () -> Version
+    def next_major(self) -> "Version":
         if self.is_prerelease() and self.minor == 0 and self.patch == 0:
             return Version(self.major, self.minor, self.patch)
 
         return self._increment_major()
 
     @property
-    def next_minor(self):  # type: () -> Version
+    def next_minor(self) -> "Version":
         if self.is_prerelease() and self.patch == 0:
             return Version(self.major, self.minor, self.patch)
 
         return self._increment_minor()
 
     @property
-    def next_patch(self):  # type: () -> Version
+    def next_patch(self) -> "Version":
         if self.is_prerelease():
             return Version(self.major, self.minor, self.patch)
 
         return self._increment_patch()
 
     @property
-    def next_breaking(self):  # type: () -> Version
+    def next_breaking(self) -> "Version":
         if self.major == 0:
             if self.minor != 0:
                 return self._increment_minor()
@@ -167,7 +167,7 @@ class Version(VersionRange):
         return self._increment_major()
 
     @property
-    def first_prerelease(self):  # type: () -> Version
+    def first_prerelease(self) -> "Version":
         return Version.parse("{}.{}.{}-alpha.0".format(self.major, self.minor, self.patch))
 
     @property
@@ -191,7 +191,7 @@ class Version(VersionRange):
         return True
 
     @classmethod
-    def parse(cls, text):  # type: (str) -> Version
+    def parse(cls, text: str) -> "Version":
         try:
             match = COMPLETE_VERSION.match(text)
         except TypeError:
@@ -221,25 +221,25 @@ class Version(VersionRange):
     def is_empty(self):
         return False
 
-    def is_prerelease(self):  # type: () -> bool
+    def is_prerelease(self) -> bool:
         return len(self._prerelease) > 0
 
-    def allows(self, version):  # type: (Version) -> bool
+    def allows(self, version: "Version") -> bool:
         return self == version
 
-    def allows_all(self, other):  # type: (VersionConstraint) -> bool
+    def allows_all(self, other: VersionConstraint) -> bool:
         return other.is_empty() or other == self
 
-    def allows_any(self, other):  # type: (VersionConstraint) -> bool
+    def allows_any(self, other: VersionConstraint) -> bool:
         return other.allows(self)
 
-    def intersect(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def intersect(self, other: VersionConstraint) -> VersionConstraint:
         if other.allows(self):
             return self
 
         return EmptyConstraint()
 
-    def union(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def union(self, other: VersionConstraint) -> VersionConstraint:
         from .version_range import VersionRange
 
         if other.allows(self):
@@ -264,25 +264,25 @@ class Version(VersionRange):
 
         return VersionUnion.of(self, other)
 
-    def difference(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def difference(self, other: VersionConstraint) -> VersionConstraint:
         if other.allows(self):
             return EmptyConstraint()
 
         return self
 
-    def equals_without_prerelease(self, other):  # type: (Version) -> bool
+    def equals_without_prerelease(self, other: "Version") -> bool:
         return self.major == other.major and self.minor == other.minor and self.patch == other.patch
 
-    def _increment_major(self):  # type: () -> Version
+    def _increment_major(self) -> "Version":
         return Version(self.major + 1, 0, 0, precision=self._precision)
 
-    def _increment_minor(self):  # type: () -> Version
+    def _increment_minor(self) -> "Version":
         return Version(self.major, self.minor + 1, 0, precision=self._precision)
 
-    def _increment_patch(self):  # type: () -> Version
+    def _increment_patch(self) -> "Version":
         return Version(self.major, self.minor, self.patch + 1, precision=self._precision)
 
-    def _normalize_prerelease(self, pre):  # type: (str) -> str
+    def _normalize_prerelease(self, pre: str) -> str:
         if not pre:
             return
 
@@ -307,7 +307,7 @@ class Version(VersionRange):
 
         return "{}.{}".format(modifier, number)
 
-    def _normalize_build(self, build):  # type: (str) -> str
+    def _normalize_build(self, build: str) -> str:
         if not build:
             return
 
@@ -319,7 +319,7 @@ class Version(VersionRange):
 
         return build
 
-    def _split_parts(self, text):  # type: (str) -> List[Union[str, int]]
+    def _split_parts(self, text: str) -> List[Union[str, int]]:
         parts = text.split(".")
 
         for i, part in enumerate(parts):
@@ -389,7 +389,7 @@ class Version(VersionRange):
 
         return 0
 
-    def _cmp_lists(self, a, b):  # type: (List, List) -> int
+    def _cmp_lists(self, a: List, b: List) -> int:
         for i in range(max(len(a), len(b))):
             a_part = None
             if i < len(a):
@@ -422,7 +422,7 @@ class Version(VersionRange):
 
         return 0
 
-    def __eq__(self, other):  # type: (Version) -> bool
+    def __eq__(self, other: "Version") -> bool:
         if not isinstance(other, Version):
             return NotImplemented
 

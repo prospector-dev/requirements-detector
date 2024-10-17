@@ -23,6 +23,9 @@ homepage = "https://github.com/landscapeio/requirements-detector"
 packages = [
   { include = "requirements_detector/"}
 ]
+include = [
+  "c2cgeoform/py.typed",
+]
 
 [tool.poetry.scripts]
 detect-requirements = 'requirements_detector.run:run'

@@ -58,7 +58,7 @@ class VersionRange(VersionConstraint):
     def is_any(self):
         return self._min is None and self._max is None
 
-    def allows(self, other):  # type: (semver.Version) -> bool
+    def allows(self, other: semver.Version) -> bool:
         if self._min is not None:
             if other < self._min:
                 return False
@@ -75,7 +75,7 @@ class VersionRange(VersionConstraint):
 
         return True
 
-    def allows_all(self, other):  # type: (VersionConstraint) -> bool
+    def allows_all(self, other: VersionConstraint) -> bool:
         from .version import Version
 
         if other.is_empty():
@@ -92,7 +92,7 @@ class VersionRange(VersionConstraint):
 
         raise ValueError("Unknown VersionConstraint type {}.".format(other))
 
-    def allows_any(self, other):  # type: (VersionConstraint) -> bool
+    def allows_any(self, other: VersionConstraint) -> bool:
         from .version import Version
 
         if other.is_empty():
@@ -109,7 +109,7 @@ class VersionRange(VersionConstraint):
 
         raise ValueError("Unknown VersionConstraint type {}.".format(other))
 
-    def intersect(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def intersect(self, other: VersionConstraint) -> VersionConstraint:
         from .version import Version
 
         if other.is_empty():
@@ -162,7 +162,7 @@ class VersionRange(VersionConstraint):
         # If we got here, there is an actual range.
         return VersionRange(intersect_min, intersect_max, intersect_include_min, intersect_include_max)
 
-    def union(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def union(self, other: VersionConstraint) -> VersionConstraint:
         from .version import Version
 
         if isinstance(other, Version):
@@ -210,7 +210,7 @@ class VersionRange(VersionConstraint):
 
         return VersionUnion.of(self, other)
 
-    def difference(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def difference(self, other: VersionConstraint) -> VersionConstraint:
         from .version import Version
 
         if other.is_empty():
@@ -265,7 +265,7 @@ class VersionRange(VersionConstraint):
 
             return VersionUnion.of(before, after)
         elif isinstance(other, VersionUnion):
-            ranges = []  # type: List[VersionRange]
+            ranges: List[VersionRange] = []
             current = self
 
             for range in other.ranges:
@@ -296,7 +296,7 @@ class VersionRange(VersionConstraint):
 
         raise ValueError("Unknown VersionConstraint type {}.".format(other))
 
-    def allows_lower(self, other):  # type: (VersionRange) -> bool
+    def allows_lower(self, other: "VersionRange") -> bool:
         if self.min is None:
             return other.min is not None
 
@@ -311,7 +311,7 @@ class VersionRange(VersionConstraint):
 
         return self.include_min and not other.include_min
 
-    def allows_higher(self, other):  # type: (VersionRange) -> bool
+    def allows_higher(self, other: "VersionRange") -> bool:
         if self.max is None:
             return other.max is not None
 
@@ -326,7 +326,7 @@ class VersionRange(VersionConstraint):
 
         return self.include_max and not other.include_max
 
-    def is_strictly_lower(self, other):  # type: (VersionRange) -> bool
+    def is_strictly_lower(self, other: "VersionRange") -> bool:
         if self.max is None or other.min is None:
             return False
 
@@ -338,10 +338,10 @@ class VersionRange(VersionConstraint):
 
         return not self.include_max or not other.include_min
 
-    def is_strictly_higher(self, other):  # type: (VersionRange) -> bool
+    def is_strictly_higher(self, other: "VersionRange") -> bool:
         return other.is_strictly_lower(self)
 
-    def is_adjacent_to(self, other):  # type: (VersionRange) -> bool
+    def is_adjacent_to(self, other: "VersionRange") -> bool:
         if self.max != other.min:
             return False
 
@@ -370,7 +370,7 @@ class VersionRange(VersionConstraint):
     def __ge__(self, other):
         return self._cmp(other) >= 0
 
-    def _cmp(self, other):  # type: (VersionRange) -> int
+    def _cmp(self, other: "VersionRange") -> int:
         if self.min is None:
             if other.min is None:
                 return self._compare_max(other)
@@ -388,7 +388,7 @@ class VersionRange(VersionConstraint):
 
         return self._compare_max(other)
 
-    def _compare_max(self, other):  # type: (VersionRange) -> int
+    def _compare_max(self, other: "VersionRange") -> int:
         if self.max is None:
             if other.max is None:
                 return 0

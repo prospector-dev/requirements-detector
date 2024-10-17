@@ -1,4 +1,5 @@
 import re
+import sys
 from pathlib import Path
 from typing import List, Union
 
@@ -8,6 +9,12 @@ from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py
 from .poetry_semver import parse_constraint
 from .requirement import DetectedRequirement
+
+_USE_TOMLLIB = sys.version_info.major > 3 or sys.version_info.minor >= 11
+if _USE_TOMLLIB:
+    import tomllib
+else:
+    import toml
 
 __all__ = [
     "find_requirements",
@@ -108,7 +115,11 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
     if isinstance(toml_file, str):
         toml_file = Path(toml_file)
 
-    parsed = toml.load(toml_file)
+    if _USE_TOMLLIB:
+        with open(toml_file, "rb") as toml_file_open:
+            parsed = tomllib.load(toml_file_open)
+    else:
+        parsed = toml.load(toml_file)
     poetry_section = parsed.get("tool", {}).get("poetry", {})
     dependencies = poetry_section.get("dependencies", {})
     dependencies.update(poetry_section.get("dev-dependencies", {}))

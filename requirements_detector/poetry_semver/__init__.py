@@ -16,7 +16,7 @@ from .version_union import VersionUnion
 __version__ = "0.1.0"
 
 
-def parse_constraint(constraints):  # type: (str) -> VersionConstraint
+def parse_constraint(constraints: str) -> VersionConstraint:
     if constraints == "*":
         return VersionRange()
 
@@ -47,7 +47,7 @@ def parse_constraint(constraints):  # type: (str) -> VersionConstraint
         return VersionUnion.of(*or_groups)
 
 
-def parse_single_constraint(constraint):  # type: (str) -> VersionConstraint
+def parse_single_constraint(constraint: str) -> VersionConstraint:
     m = re.match(r"(?i)^v?[xX*](\.[xX*])*$", constraint)
     if m:
         return VersionRange()

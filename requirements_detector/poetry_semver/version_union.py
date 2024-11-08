@@ -1,9 +1,12 @@
-from typing import List
+from typing import TYPE_CHECKING, List
 
 import semver
 
 from .empty_constraint import EmptyConstraint
 from .version_constraint import VersionConstraint
+
+if TYPE_CHECKING:
+    from .version_range import VersionRange
 
 
 class VersionUnion(VersionConstraint):
@@ -73,10 +76,10 @@ class VersionUnion(VersionConstraint):
     def is_any(self):
         return False
 
-    def allows(self, version):  # type: (semver.Version) -> bool
+    def allows(self, version: semver.Version) -> bool:
         return any([constraint.allows(version) for constraint in self._ranges])
 
-    def allows_all(self, other):  # type: (VersionConstraint) -> bool
+    def allows_all(self, other: VersionConstraint) -> bool:
         our_ranges = iter(self._ranges)
         their_ranges = iter(self._ranges_for(other))
 
@@ -91,7 +94,7 @@ class VersionUnion(VersionConstraint):
 
         return their_current_range is None
 
-    def allows_any(self, other):  # type: (VersionConstraint) -> bool
+    def allows_any(self, other: VersionConstraint) -> bool:
         our_ranges = iter(self._ranges)
         their_ranges = iter(self._ranges_for(other))
 
@@ -109,7 +112,7 @@ class VersionUnion(VersionConstraint):
 
         return False
 
-    def intersect(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def intersect(self, other: VersionConstraint) -> VersionConstraint:
         our_ranges = iter(self._ranges)
         their_ranges = iter(self._ranges_for(other))
         new_ranges = []
@@ -130,10 +133,10 @@ class VersionUnion(VersionConstraint):
 
         return VersionUnion.of(*new_ranges)
 
-    def union(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def union(self, other: VersionConstraint) -> VersionConstraint:
         return VersionUnion.of(self, other)
 
-    def difference(self, other):  # type: (VersionConstraint) -> VersionConstraint
+    def difference(self, other: VersionConstraint) -> VersionConstraint:
         our_ranges = iter(self._ranges)
         their_ranges = iter(self._ranges_for(other))
         new_ranges = []
@@ -213,7 +216,7 @@ class VersionUnion(VersionConstraint):
 
         return VersionUnion.of(*new_ranges)
 
-    def _ranges_for(self, constraint):  # type: (VersionConstraint) -> List[semver.VersionRange]
+    def _ranges_for(self, constraint: VersionConstraint) -> List["VersionRange"]:
         from .version_range import VersionRange
 
         if constraint.is_empty():
@@ -227,7 +230,7 @@ class VersionUnion(VersionConstraint):
 
         raise ValueError("Unknown VersionConstraint type {}".format(constraint))
 
-    def _excludes_single_version(self):  # type: () -> bool
+    def _excludes_single_version(self) -> bool:
         from .version import Version
         from .version_range import VersionRange
 

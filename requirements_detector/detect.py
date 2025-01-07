@@ -3,8 +3,6 @@ import sys
 from pathlib import Path
 from typing import List, Optional, Union
 
-import toml
-
 from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py
 from .poetry_semver import parse_constraint

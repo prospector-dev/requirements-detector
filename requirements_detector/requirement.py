@@ -8,6 +8,7 @@ we don't expect relative file paths to exist, for example. Note that the parsing
 is also intentionally more lenient - it is not our job to validate the requirements
 list.
 """
+
 import os
 import re
 from pathlib import Path

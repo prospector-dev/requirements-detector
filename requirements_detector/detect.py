@@ -13,7 +13,7 @@ _USE_TOMLLIB = sys.version_info.major > 3 or sys.version_info.minor >= 11
 if _USE_TOMLLIB:
     import tomllib
 else:
-    import toml
+    import tomli as tomllib
 
 __all__ = [
     "find_requirements",
@@ -133,11 +133,9 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
     if isinstance(toml_file, str):
         toml_file = Path(toml_file)
 
-    if _USE_TOMLLIB:
-        with open(toml_file, "rb") as toml_file_open:
-            parsed = tomllib.load(toml_file_open)
-    else:
-        parsed = toml.load(toml_file)
+    with open(toml_file, "rb") as toml_file_open:
+        parsed = tomllib.load(toml_file_open)
+
     poetry_section = parsed.get("tool", {}).get("poetry", {})
     dependencies = poetry_section.get("dependencies", {})
     dependencies.update(poetry_section.get("dev-dependencies", {}))

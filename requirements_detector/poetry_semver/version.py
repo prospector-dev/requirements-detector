@@ -168,7 +168,9 @@ class Version(VersionRange):
 
     @property
     def first_prerelease(self) -> "Version":
-        return Version.parse("{}.{}.{}-alpha.0".format(self.major, self.minor, self.patch))
+        return Version.parse(
+            "{}.{}.{}-alpha.0".format(self.major, self.minor, self.patch)
+        )
 
     @property
     def min(self):
@@ -271,7 +273,11 @@ class Version(VersionRange):
         return self
 
     def equals_without_prerelease(self, other: "Version") -> bool:
-        return self.major == other.major and self.minor == other.minor and self.patch == other.patch
+        return (
+            self.major == other.major
+            and self.minor == other.minor
+            and self.patch == other.patch
+        )
 
     def _increment_major(self) -> "Version":
         return Version(self.major + 1, 0, 0, precision=self._precision)
@@ -280,7 +286,9 @@ class Version(VersionRange):
         return Version(self.major, self.minor + 1, 0, precision=self._precision)
 
     def _increment_patch(self) -> "Version":
-        return Version(self.major, self.minor, self.patch + 1, precision=self._precision)
+        return Version(
+            self.major, self.minor, self.patch + 1, precision=self._precision
+        )
 
     def _normalize_prerelease(self, pre: str) -> str:
         if not pre:

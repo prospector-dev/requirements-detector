@@ -1,6 +1,5 @@
 import re
 
-from .empty_constraint import EmptyConstraint
 from .patterns import (
     BASIC_CONSTRAINT,
     CARET_CONSTRAINT,
@@ -23,7 +22,9 @@ def parse_constraint(constraints: str) -> VersionConstraint:
     or_constraints = re.split(r"\s*\|\|?\s*", constraints.strip())
     or_groups = []
     for constraints in or_constraints:
-        and_constraints = re.split("(?<!^)(?<![=>< ,]) *(?<!-)[, ](?!-) *(?!,|$)", constraints)
+        and_constraints = re.split(
+            "(?<!^)(?<![=>< ,]) *(?<!-)[, ](?!-) *(?!,|$)", constraints
+        )
         constraint_objects = []
 
         if len(and_constraints) > 1:
@@ -61,7 +62,9 @@ def parse_single_constraint(constraint: str) -> VersionConstraint:
         if len(m.group(1).split(".")) == 1:
             high = version.stable.next_major
 
-        return VersionRange(version, high, include_min=True, always_include_max_prerelease=True)
+        return VersionRange(
+            version, high, include_min=True, always_include_max_prerelease=True
+        )
 
     # PEP 440 Tilde range (~=)
     m = TILDE_PEP440_CONSTRAINT.match(constraint)
@@ -82,7 +85,9 @@ def parse_single_constraint(constraint: str) -> VersionConstraint:
             low = Version(version.major, version.minor, version.patch)
             high = version.stable.next_minor
 
-        return VersionRange(low, high, include_min=True, always_include_max_prerelease=True)
+        return VersionRange(
+            low, high, include_min=True, always_include_max_prerelease=True
+        )
 
     # Caret range
     m = CARET_CONSTRAINT.match(constraint)
@@ -142,7 +147,9 @@ def parse_single_constraint(constraint: str) -> VersionConstraint:
         try:
             version = Version.parse(version)
         except ValueError:
-            raise ValueError("Could not parse version constraint: {}".format(constraint))
+            raise ValueError(
+                "Could not parse version constraint: {}".format(constraint)
+            )
 
         if op == "<":
             return VersionRange(max=version)

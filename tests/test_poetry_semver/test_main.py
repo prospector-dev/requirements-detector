@@ -201,12 +201,19 @@ def test_versions_are_sortable(unsorted, sorted_):
 @pytest.mark.parametrize(
     "constraint, expected",
     [
-        ([
-    {'version': "<=1.9", 'python': ">=3.6,<3.8"},
-    {'version': "^2.0", 'python': ">=3.8"}
-], VersionUnion(VersionRange(max=Version(1, 9), include_max=True), VersionRange(Version(2), Version(3), True)))
-
-])
+        (
+            [
+                {"version": "<=1.9", "python": ">=3.6,<3.8"},
+                {"version": "^2.0", "python": ">=3.8"},
+            ],
+            VersionUnion(
+                VersionRange(max=Version(1, 9), include_max=True),
+                VersionRange(Version(2), Version(3), True),
+            ),
+        )
+    ],
+)
 def test_versions_list(constraint, expected):
     from requirements_detector.detect import _version_from_spec
+
     assert _version_from_spec(constraint) == expected

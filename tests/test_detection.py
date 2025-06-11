@@ -11,7 +11,7 @@ from requirements_detector.detect import (
 )
 from requirements_detector.requirement import DetectedRequirement
 
-_TEST_DIR = Path(__file__).parent / 'detection'
+_TEST_DIR = Path(__file__).parent / "detection"
 
 
 class DependencyDetectionTest(TestCase):
@@ -19,7 +19,7 @@ class DependencyDetectionTest(TestCase):
         return sorted(DetectedRequirement.parse(req) for req in requirements)
 
     def test_requirements_txt_parsing(self):
-        filepath = _TEST_DIR / 'test1/requirements.txt'
+        filepath = _TEST_DIR / "test1/requirements.txt"
         dependencies = from_requirements_txt(filepath)
 
         expected = self._expected(
@@ -80,23 +80,23 @@ class DependencyDetectionTest(TestCase):
         self.assertTrue(len(reqs) > 0)
 
         names = [req.name for req in reqs]
-        self.assertIn('click', names)
-        self.assertIn('twine', names)
-        self.assertIn('requests', names)
-        self.assertIn('pytest', names)
+        self.assertIn("click", names)
+        self.assertIn("twine", names)
+        self.assertIn("requests", names)
+        self.assertIn("pytest", names)
 
-        pyroma = [req for req in reqs if req.name == 'pyroma'][0]
+        pyroma = [req for req in reqs if req.name == "pyroma"][0]
         self.assertEqual(2, len(pyroma.version_specs[0]))
-        self.assertEqual('pyroma>=2.4', str(pyroma))
+        self.assertEqual("pyroma>=2.4", str(pyroma))
 
     def _test_setup_py(self, setup_py_file, *expected):
-        filepath = _TEST_DIR / 'test4' / setup_py_file
+        filepath = _TEST_DIR / "test4" / setup_py_file
         dependencies = from_setup_py(str(filepath))
         expected = self._expected(*expected)
         self.assertEqual(expected, sorted(dependencies))
 
     def _test_setup_py_not_parseable(self, setup_py_file):
-        filepath = _TEST_DIR / 'test4' / setup_py_file
+        filepath = _TEST_DIR / "test4" / setup_py_file
         self.assertRaises(CouldNotParseRequirements, from_setup_py, filepath)
 
     def test_simple_setup_py_parsing(self):
@@ -109,16 +109,24 @@ class DependencyDetectionTest(TestCase):
         self._test_setup_py("tuple.py", "Django==1.5.0", "django-gubbins==1.1.2")
 
     def test_subscript_assign(self):
-        self._test_setup_py("subscript_assign.py", "Django==1.5.0", "django-gubbins==1.1.2")
+        self._test_setup_py(
+            "subscript_assign.py", "Django==1.5.0", "django-gubbins==1.1.2"
+        )
 
     def test_utf8_setup_py(self):
         self._test_setup_py("utf8.py", "Django==1.5.0", "django-gubbins==1.1.2")
 
     def test_requires_setup_py(self):
-        self._test_setup_py("uses_requires.py", "Django==1.5.0", "django-gubbins==1.1.2")
+        self._test_setup_py(
+            "uses_requires.py", "Django==1.5.0", "django-gubbins==1.1.2"
+        )
 
     def test_requires_and_install_requires_setup_py(self):
-        self._test_setup_py("uses_requires_and_install_requires.py", "Django==1.5.0", "django-gubbins==1.1.2")
+        self._test_setup_py(
+            "uses_requires_and_install_requires.py",
+            "Django==1.5.0",
+            "django-gubbins==1.1.2",
+        )
 
     def test_callable_install_requires(self):
         self._test_setup_py_not_parseable("callable.py")

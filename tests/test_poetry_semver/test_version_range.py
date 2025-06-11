@@ -1,6 +1,8 @@
 import pytest
 
-from requirements_detector.poetry_semver import EmptyConstraint, Version, VersionRange
+from requirements_detector.poetry_semver import Version, VersionRange
+from requirements_detector.poetry_semver.empty_constraint import EmptyConstraint
+
 
 
 @pytest.fixture()

@@ -22,7 +22,11 @@ class VersionRange(VersionConstraint):
             and not include_max
             and not full_max.is_prerelease()
             and not full_max.build
-            and (min is None or not min.is_prerelease() or not min.equals_without_prerelease(full_max))
+            and (
+                min is None
+                or not min.is_prerelease()
+                or not min.equals_without_prerelease(full_max)
+            )
         ):
             full_max = full_max.first_prerelease
 
@@ -105,7 +109,9 @@ class VersionRange(VersionConstraint):
             return any([self.allows_any(constraint) for constraint in other.ranges])
 
         if isinstance(other, VersionRange):
-            return not other.is_strictly_lower(self) and not other.is_strictly_higher(self)
+            return not other.is_strictly_lower(self) and not other.is_strictly_higher(
+                self
+            )
 
         raise ValueError("Unknown VersionConstraint type {}.".format(other))
 
@@ -160,7 +166,9 @@ class VersionRange(VersionConstraint):
             return intersect_min
 
         # If we got here, there is an actual range.
-        return VersionRange(intersect_min, intersect_max, intersect_include_min, intersect_include_max)
+        return VersionRange(
+            intersect_min, intersect_max, intersect_include_min, intersect_include_max
+        )
 
     def union(self, other: VersionConstraint) -> VersionConstraint:
         from .version import Version
@@ -170,19 +178,23 @@ class VersionRange(VersionConstraint):
                 return self
 
             if other == self.min:
-                return VersionRange(self.min, self.max, include_min=True, include_max=self.include_max)
+                return VersionRange(
+                    self.min, self.max, include_min=True, include_max=self.include_max
+                )
 
             if other == self.max:
-                return VersionRange(self.min, self.max, include_min=self.include_min, include_max=True)
+                return VersionRange(
+                    self.min, self.max, include_min=self.include_min, include_max=True
+                )
 
             return VersionUnion.of(self, other)
 
         if isinstance(other, VersionRange):
             # If the two ranges don't overlap, we won't be able to create a single
             # VersionRange for both of them.
-            edges_touch = (self.max == other.min and (self.include_max or other.include_min)) or (
-                self.min == other.max and (self.include_min or other.include_max)
-            )
+            edges_touch = (
+                self.max == other.min and (self.include_max or other.include_min)
+            ) or (self.min == other.max and (self.include_min or other.include_max))
 
             if not edges_touch and not self.allows_any(other):
                 return VersionUnion.of(self, other)
@@ -245,14 +257,18 @@ class VersionRange(VersionConstraint):
             elif self.min == other.min:
                 before = self.min
             else:
-                before = VersionRange(self.min, other.min, self.include_min, not other.include_min)
+                before = VersionRange(
+                    self.min, other.min, self.include_min, not other.include_min
+                )
 
             if not self.allows_higher(other):
                 after = None
             elif self.max == other.max:
                 after = self.max
             else:
-                after = VersionRange(other.max, self.max, not other.include_max, self.include_max)
+                after = VersionRange(
+                    other.max, self.max, not other.include_max, self.include_max
+                )
 
             if before is None and after is None:
                 return EmptyConstraint()
@@ -345,7 +361,12 @@ class VersionRange(VersionConstraint):
         if self.max != other.min:
             return False
 
-        return self.include_max and not other.include_min or not self.include_max and other.include_min
+        return (
+            self.include_max
+            and not other.include_min
+            or not self.include_max
+            and other.include_min
+        )
 
     def __eq__(self, other):
         if not isinstance(other, VersionRange):

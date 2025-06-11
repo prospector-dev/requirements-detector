@@ -60,7 +60,10 @@ class VersionUnion(VersionConstraint):
         merged = []
         for constraint in flattened:
             # Merge this constraint with the previous one, but only if they touch.
-            if not merged or (not merged[-1].allows_any(constraint) and not merged[-1].is_adjacent_to(constraint)):
+            if not merged or (
+                not merged[-1].allows_any(constraint)
+                and not merged[-1].is_adjacent_to(constraint)
+            ):
                 merged.append(constraint)
             else:
                 merged[-1] = merged[-1].union(constraint)

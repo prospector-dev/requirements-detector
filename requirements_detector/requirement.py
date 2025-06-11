@@ -8,6 +8,7 @@ we don't expect relative file paths to exist, for example. Note that the parsing
 is also intentionally more lenient - it is not our job to validate the requirements
 list.
 """
+
 import os
 import re
 from pathlib import Path
@@ -51,12 +52,18 @@ def _strip_fragment(urlparts):
 
 class DetectedRequirement:
     def __init__(
-        self, name: str = None, url: str = None, requirement: Requirement = None, location_defined: Path = None
+        self,
+        name: str = None,
+        url: str = None,
+        requirement: Requirement = None,
+        location_defined: Path = None,
     ):
         if requirement is not None:
             self.name = requirement.name
             self.requirement = requirement
-            self.version_specs = [(s.operator, s.version) for s in requirement.specifier]
+            self.version_specs = [
+                (s.operator, s.version) for s in requirement.specifier
+            ]
             self.url = None
         else:
             self.name = name
@@ -66,7 +73,9 @@ class DetectedRequirement:
         self.location_defined = location_defined
 
     def _format_specs(self) -> str:
-        return ",".join(["%s%s" % (comp, version) for comp, version in self.version_specs])
+        return ",".join(
+            ["%s%s" % (comp, version) for comp, version in self.version_specs]
+        )
 
     def pip_format(self) -> str:
         if self.url:
@@ -95,7 +104,11 @@ class DetectedRequirement:
         return "<DetectedRequirement:%s>" % str(self)
 
     def __eq__(self, other):
-        return self.name == other.name and self.url == other.url and self.version_specs == other.version_specs
+        return (
+            self.name == other.name
+            and self.url == other.url
+            and self.version_specs == other.version_specs
+        )
 
     def __gt__(self, other):
         return (self.name or "") > (other.name or "")
@@ -149,7 +162,9 @@ class DetectedRequirement:
                 # this happens if the line is invalid
                 return None
             else:
-                return DetectedRequirement(requirement=req, location_defined=location_defined)
+                return DetectedRequirement(
+                    requirement=req, location_defined=location_defined
+                )
 
         # otherwise, this is some kind of URL
         name = _parse_egg_name(url.fragment)
@@ -158,4 +173,6 @@ class DetectedRequirement:
         if vcs_scheme:
             url = "%s://%s" % (vcs_scheme, url)
 
-        return DetectedRequirement(name=name, url=url, location_defined=location_defined)
+        return DetectedRequirement(
+            name=name, url=url, location_defined=location_defined
+        )

@@ -1,8 +1,12 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = [ "poetry-core>=1" ]
+
 [tool.poetry]
 name = "test8"
 version = "0.1.0"
 description = ""
-authors = ["Nobody Smith <nobody@nowhere.com>"]
+authors = [ "Nobody Smith <nobody@nowhere.com>" ]
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -10,12 +14,8 @@ python = "^3.3"
 requests = ">=2.25,<2.27"
 twine = "~3.8"
 click = "==8.0.4"
-pyroma = {version = ">=2.4", optional = true}
-mytestdependency = {git = "ssh://git@github.com/MyOrg/MyRepo.git",rev = "1.2.3"}
+pyroma = { version = ">=2.4", optional = true }
+mytestdependency = { git = "ssh://git@github.com/MyOrg/MyRepo.git", rev = "1.2.3" }
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"

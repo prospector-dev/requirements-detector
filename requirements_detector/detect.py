@@ -87,7 +87,7 @@ def find_requirements(path: P) -> List[DetectedRequirement]:
         if reqfile.exists and reqfile.is_file():
             try:
                 requirements += from_requirements_txt(reqfile)
-            except CouldNotParseRequirements as e:
+            except CouldNotParseRequirements:
                 pass
 
     requirements_dir = path / "requirements"
@@ -154,7 +154,12 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
                 continue
         assert parsed_spec_obj is not None
         parsed_spec = str(parsed_spec_obj)
-        if "," not in parsed_spec and "<" not in parsed_spec and ">" not in parsed_spec and "=" not in parsed_spec:
+        if (
+            "," not in parsed_spec
+            and "<" not in parsed_spec
+            and ">" not in parsed_spec
+            and "=" not in parsed_spec
+        ):
             parsed_spec = f"=={parsed_spec}"
 
         req = DetectedRequirement.parse(f"{name}{parsed_spec}", toml_file)

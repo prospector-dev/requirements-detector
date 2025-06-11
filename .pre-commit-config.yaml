@@ -1,22 +1,41 @@
-fail_fast: true
+# https://pre-commit.com/
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: mixed-line-ending
+      # tidy up extra whitespace at end of files
+      - id: trailing-whitespace
+      # ensure consistent newline endings for files (\n only)
+      - id: end-of-file-fixer
+      # fix newlines in general to prevent pesky Windows users writing CRLF
+      - id: mixed-line-ending
         args: [ --fix=lf ]
-    -   id: check-added-large-files
--   repo: https://github.com/psf/black
-    rev: 23.3.0
+      # do not allow pdb/breakpoint statements to be checked in
+      - id: debug-statements
+      # validate syntax of some file types
+      - id: check-yaml
+      - id: check-toml
+      # prevent large files being added
+      - id: check-added-large-files
+
+  # Code formatting and linting
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: "v2.5.1"
     hooks:
-    -   id: black
-        args:
-            - --force-exclude=tests/
-            - --line-length=120
--   repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+      - id: pyproject-fmt
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.2.0
     hooks:
-    -   id: isort
-        args: ["--profile", "black", "--filter-files"]
+      - id: flake8
+        args: [--max-line-length=120]
+  - repo: https://github.com/python/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        exclude: migrations
+        args: [ "--profile", "black", "--filter-files" ]
+exclude: "tests/.*"

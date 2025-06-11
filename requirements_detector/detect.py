@@ -1,5 +1,4 @@
 import re
-import sys
 from pathlib import Path
 from typing import List, Optional, Union
 
@@ -9,10 +8,11 @@ from .poetry_semver import parse_constraint
 from .poetry_semver.version_constraint import VersionConstraint
 from .requirement import DetectedRequirement
 
-_USE_TOMLLIB = sys.version_info.major > 3 or sys.version_info.minor >= 11
-if _USE_TOMLLIB:
+try:
+    # added in Python 3.11: https://docs.python.org/3/library/tomllib.html
     import tomllib
-else:
+except ImportError:
+    # for Python <= 3.10:
     import tomli as tomllib
 
 __all__ = [

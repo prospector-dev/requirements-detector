@@ -31,9 +31,6 @@ include = [
   "c2cgeoform/py.typed",
 ]
 
-[tool.poetry.scripts]
-detect-requirements = 'requirements_detector.run:run'
-
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 astroid = "^4.0"
@@ -49,3 +46,5 @@ twine = "^6.1.0"
 coverage = "^5.5"
 pytest-benchmark = "^3.4.1"
 pytest-cov = "^2.12.1"
+[tool.poetry.scripts]
+detect-requirements = 'requirements_detector.run:run'

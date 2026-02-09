@@ -7,16 +7,16 @@ name = "requirements-detector"
 version = "1.5.0"
 authors = [ "Landscape.io <code@landscape.io>" ]
 classifiers = [
-  'Development Status :: 5 - Production/Stable',
-  'Environment :: Console',
-  'Intended Audience :: Developers',
-  'Operating System :: Unix',
-  'Topic :: Software Development :: Quality Assurance',
-  'Programming Language :: Python :: 3.10',
-  'Programming Language :: Python :: 3.11',
-  'Programming Language :: Python :: 3.12',
-  'Programming Language :: Python :: 3.13',
-  'License :: OSI Approved :: MIT License',
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: Unix",
+  "Topic :: Software Development :: Quality Assurance",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "License :: OSI Approved :: MIT License",
 ]
 license = "MIT"
 keywords = [ "python", "requirements detector" ]
@@ -29,21 +29,16 @@ packages = [
 include = [
   "c2cgeoform/py.typed",
 ]
-
-[tool.poetry.dependencies]
-python = ">=3.10,<4.0"
-astroid = "^4.0"
-packaging = ">=21.3"
-tomli = { version = "^2.2.1", python = "<3.11" }
-semver = "^3.0.0"
-
-[tool.poetry.dev-dependencies]
-tox = "^3.24.5"
-pre-commit = "^4.2.0"
-pytest = "^6.2.4"
-twine = "^6.1.0"
-coverage = "^5.5"
-pytest-benchmark = "^3.4.1"
-pytest-cov = "^2.12.1"
-[tool.poetry.scripts]
-detect-requirements = 'requirements_detector.run:run'
+dependencies.python = ">=3.10,<4.0"
+dependencies.astroid = "^4.0"
+dependencies.packaging = ">=21.3"
+dependencies.tomli = { version = "^2.2.1", python = "<3.11" }
+dependencies.semver = "^3.0.0"
+dev-dependencies.tox = "^3.24.5"
+dev-dependencies.pre-commit = "^4.2.0"
+dev-dependencies.pytest = "^6.2.4"
+dev-dependencies.twine = "^6.1.0"
+dev-dependencies.coverage = "^5.5"
+dev-dependencies.pytest-benchmark = "^3.4.1"
+dev-dependencies.pytest-cov = "^2.12.1"
+scripts.detect-requirements = "requirements_detector.run:run"

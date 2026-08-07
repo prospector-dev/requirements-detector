@@ -145,12 +145,16 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
             continue
 
         parsed_spec_obj = _version_from_spec(spec)
-        if parsed_spec_obj is None and isinstance(spec, dict) and "version" not in spec:
+        if parsed_spec_obj is None:
+            # A dependency can be pinned by something other than a version: a
+            # path, a URL or a git reference. Poetry also allows a list of such
+            # entries -- multiple constraints -- and every entry in it may be
+            # version-less, in which case there is no constraint to record at
+            # all. Keep the name, which is what the caller asked for.
             req = DetectedRequirement.parse(f"{name}", toml_file)
             if req is not None:
                 requirements.append(req)
-                continue
-        assert parsed_spec_obj is not None
+            continue
         parsed_spec = str(parsed_spec_obj)
         if (
             "," not in parsed_spec

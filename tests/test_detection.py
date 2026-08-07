@@ -89,6 +89,24 @@ class DependencyDetectionTest(TestCase):
         self.assertEqual(2, len(pyroma.version_specs[0]))
         self.assertEqual("pyroma>=2.4", str(pyroma))
 
+    def test_pyproject_toml_without_versions(self):
+        # a dependency can be pinned by a path, a URL or a git reference
+        # instead of a version, including inside a list of multiple
+        # constraints where every entry is version-less
+        filepath = _TEST_DIR / "test9/pyproject.toml"
+        reqs = from_pyproject_toml(str(filepath))
+
+        by_name = {req.name: req for req in reqs}
+        self.assertEqual(
+            ["gitdep", "localdep", "mixed", "pathdep", "requests"],
+            sorted(by_name),
+        )
+
+        for name in ("localdep", "pathdep", "gitdep"):
+            self.assertEqual(name, str(by_name[name]))
+
+        self.assertEqual("mixed>=1.0,<2.0", str(by_name["mixed"]))
+
     def _test_setup_py(self, setup_py_file, *expected):
         filepath = _TEST_DIR / "test4" / setup_py_file
         dependencies = from_setup_py(str(filepath))

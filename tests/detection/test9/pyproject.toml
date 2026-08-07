@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "test9"
+version = "0.1.0"
+description = "dependencies that are pinned by something other than a version"
+authors = ["Test <test@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.28"
+
+# a single version-less entry
+localdep = { path = "../localdep" }
+
+# multiple constraints, every entry version-less
+pathdep = [
+    { path = "../pathdep-linux", markers = "sys_platform == 'linux'" },
+    { path = "../pathdep-windows", markers = "sys_platform == 'win32'" },
+]
+gitdep = [
+    { git = "https://example.com/linux.git", markers = "sys_platform == 'linux'" },
+    { git = "https://example.com/windows.git", markers = "sys_platform == 'win32'" },
+]
+
+# multiple constraints where one entry does carry a version
+mixed = [
+    { version = "^1.0", python = ">=3.10" },
+    { path = "../mixed-legacy", python = "<3.10" },
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

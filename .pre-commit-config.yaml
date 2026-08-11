@@ -19,10 +19,6 @@ repos:
       - id: check-added-large-files
 
   # Code formatting and linting
-  - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "v2.27.0"
-    hooks:
-      - id: pyproject-fmt
   - repo: https://github.com/pycqa/flake8
     rev: 7.3.0
     hooks:

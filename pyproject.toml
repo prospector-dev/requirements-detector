@@ -4,7 +4,7 @@ requires = [ "poetry-core>=1" ]
 
 [tool.poetry]
 name = "requirements-detector"
-version = "1.5.0"
+version = "1.6.0"
 description = "Python tool to find and list requirements of a Python project"
 license = "MIT"
 authors = [ "Landscape.io <code@landscape.io>" ]
@@ -21,6 +21,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Software Development :: Quality Assurance",
 ]
 packages = [
@@ -34,11 +35,11 @@ dependencies.astroid = "^4.0"
 dependencies.packaging = ">=21.3"
 dependencies.semver = "^3.0.0"
 dependencies.tomli = { version = "^2.2.1", python = "<3.11" }
-dev-dependencies.coverage = "^5.5"
-dev-dependencies.pre-commit = "^4.2.0"
-dev-dependencies.pytest = "^6.2.4"
-dev-dependencies.pytest-benchmark = "^3.4.1"
-dev-dependencies.pytest-cov = "^2.12.1"
-dev-dependencies.tox = "^3.24.5"
-dev-dependencies.twine = "^6.1.0"
+group.dev.dependencies.coverage = "^5.5"
+group.dev.dependencies.pre-commit = "^4.2.0"
+group.dev.dependencies.pytest = "^6.2.4"
+group.dev.dependencies.pytest-benchmark = "^3.4.1"
+group.dev.dependencies.pytest-cov = "^2.12.1"
+group.dev.dependencies.tox = "^3.24.5"
+group.dev.dependencies.twine = "^6.1.0"
 scripts.detect-requirements = "requirements_detector.run:run"
